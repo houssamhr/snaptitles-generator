@@ -63,11 +63,6 @@ button{display:block;width:100%;padding:18px;font-size:1.2em;font-weight:700;col
     <label for="langSelect">🌍 Language: </label>
     <select id="langSelect">
         <option value="en">🇺🇸 English</option>
-        <option value="ar">🇸🇦 Arabic</option>
-        <option value="fr">🇫🇷 French</option>
-        <option value="es">🇪🇸 Spanish</option>
-        <option value="de">🇩🇪 German</option>
-        <option value="it">🇮🇹 Italian</option>
     </select>
 </div>
 
@@ -96,84 +91,59 @@ document.addEventListener('DOMContentLoaded', () => {
             copied: "Copied!",
         }
     };
-
-    let currentLang = 'en';
-
-    const langSelect = document.getElementById('langSelect');
-    const description = document.getElementById('description');
-    const pageTitle = document.getElementById('pageTitle');
-    const mainTitle = document.getElementById('mainTitle');
     const topicInput = document.getElementById('topicInput');
+    const titlesDiv = document.getElementById('titles');
     const generateBtn = document.getElementById('generateBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const titlesDiv = document.getElementById('titles');
 
-    function applyLanguage() {
-        const L = translations[currentLang];
-        pageTitle.textContent = L.pageTitle;
-        mainTitle.textContent = L.mainTitle;
-        description.textContent = L.description;
-        topicInput.placeholder = L.placeholder;
-        generateBtn.textContent = L.button;
-        resetBtn.textContent = L.reset;
-        const isRTL = currentLang === 'ar';
-        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
-        document.body.style.direction = isRTL ? 'rtl' : 'ltr';
-    }
-
-    langSelect.addEventListener('change', (e) => {
-        currentLang = e.target.value;
-        applyLanguage();
-    });
-
-    window.resetForm = function() {
-        topicInput.value = '';
-        titlesDiv.innerHTML = '';
-        topicInput.classList.remove('error');
-    };
-    resetBtn.addEventListener('click', resetForm);
-
-    function copyToClipboard(text, btn) {
-        if (!navigator.clipboard) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            try { document.execCommand('copy'); } catch (_) {}
-            document.body.removeChild(ta);
-            flashCopy(btn);
-            return;
-        }
-        navigator.clipboard.writeText(text).then(() => flashCopy(btn)).catch(() => alert('Failed to copy'));
-    }
-
-    function flashCopy(btn) {
-        const old = btn.innerHTML;
-        btn.innerHTML = '✅';
-        setTimeout(() => btn.innerHTML = old, 900);
-    }
-
-    // Improved topic-to-category detection
     const CATEGORY_TEMPLATES = {
         COOK: [
-            "I tried [KEYWORD] recipes for 7 days – you won't believe what happened!",
+            "I tried [KEYWORD] recipes for 7 days – unbelievable!",
             "Stop making [KEYWORD] mistakes! Here's the secret",
-            "The ultimate [KEYWORD] hacks for beginners"
+            "The ultimate [KEYWORD] hacks for beginners",
+            "Top [KEYWORD] tricks to save time in the kitchen",
+            "You won't believe these [KEYWORD] results",
+            "[KEYWORD] tips chefs don't want you to know",
+            "How to master [KEYWORD] in 5 minutes",
+            "Insane [KEYWORD] transformation in one week",
+            "The truth about [KEYWORD] revealed",
+            "Stop ignoring these [KEYWORD] secrets"
         ],
         FITNESS: [
             "I did [KEYWORD] for 30 days – insane results!",
             "Stop wasting time – [KEYWORD] tips you need to know",
-            "The [KEYWORD] routine pros use daily"
+            "The [KEYWORD] routine pros use daily",
+            "Top 10 [KEYWORD] workouts for beginners",
+            "Transform your body with [KEYWORD] easily",
+            "I can't believe these [KEYWORD] changes",
+            "The best [KEYWORD] tricks for quick results",
+            "[KEYWORD] secrets that actually work",
+            "Why everyone is talking about [KEYWORD]",
+            "Stop ignoring these [KEYWORD] hacks"
         ],
         GAMING: [
             "Gamers are exploiting [KEYWORD] like crazy!",
             "Top 10 [KEYWORD] secrets you missed",
-            "I spent 24 hours in [KEYWORD] – shocking moments!"
+            "I spent 24 hours in [KEYWORD] – shocking moments!",
+            "The ultimate [KEYWORD] guide for beginners",
+            "[KEYWORD] tricks that will blow your mind",
+            "You won't believe these [KEYWORD] tips",
+            "[KEYWORD] hacks every gamer should know",
+            "How to dominate [KEYWORD] fast",
+            "The truth about [KEYWORD] gameplay",
+            "Stop making these [KEYWORD] mistakes"
         ],
         BEAUTY: [
             "The [KEYWORD] beauty hack everyone should know",
             "I tried [KEYWORD] products – unbelievable results",
-            "Stop doing [KEYWORD] wrong! Watch this"
+            "Stop doing [KEYWORD] wrong! Watch this",
+            "Top [KEYWORD] tricks for glowing skin",
+            "[KEYWORD] secrets makeup artists won't tell you",
+            "You won't believe these [KEYWORD] transformations",
+            "Quick [KEYWORD] tips for beginners",
+            "The ultimate [KEYWORD] guide",
+            "Insane [KEYWORD] results in 7 days",
+            "Stop ignoring these [KEYWORD] beauty hacks"
         ],
         DEFAULT: [
             "You won't believe what happened with [KEYWORD]!",
@@ -183,65 +153,58 @@ document.addEventListener('DOMContentLoaded', () => {
             "The truth about [KEYWORD] no one tells you",
             "Stop ignoring [KEYWORD] tips! Here's why",
             "Everything you need to know about [KEYWORD]",
-            "Insane results from trying [KEYWORD] once"
+            "Insane results from trying [KEYWORD] once",
+            "The ultimate [KEYWORD] guide",
+            "[KEYWORD] secrets revealed"
         ]
     };
 
-    function detectCategory(topic) {
+    function detectCategory(topic){
         const t = topic.toLowerCase();
-        if (t.includes("cook")||t.includes("recipe")||t.includes("food")) return "COOK";
-        if (t.includes("gym")||t.includes("fitness")||t.includes("workout")||t.includes("fat")||t.includes("lose")) return "FITNESS";
-        if (t.includes("game")||t.includes("gaming")||t.includes("play")) return "GAMING";
-        if (t.includes("makeup")||t.includes("beauty")||t.includes("skincare")) return "BEAUTY";
+        if(t.includes("cook")||t.includes("recipe")||t.includes("food")) return "COOK";
+        if(t.includes("gym")||t.includes("fitness")||t.includes("workout")||t.includes("fat")||t.includes("lose")) return "FITNESS";
+        if(t.includes("game")||t.includes("gaming")||t.includes("play")) return "GAMING";
+        if(t.includes("makeup")||t.includes("beauty")||t.includes("skincare")) return "BEAUTY";
         return "DEFAULT";
     }
 
-    function generateTitles() {
-        const L = translations[currentLang];
+    function generateTitles(){
         const topic = topicInput.value.trim();
-        if (!topic) {
+        if(!topic){
             topicInput.classList.add('error');
-            setTimeout(() => topicInput.classList.remove('error'), 500);
-            alert(L.alert);
+            setTimeout(()=>topicInput.classList.remove('error'),500);
+            alert(translations.en.alert);
             return;
         }
-
         const category = detectCategory(topic);
         const templates = CATEGORY_TEMPLATES[category];
-        const NUM_TITLES = 10;
         const used = new Set();
-        let attempts = 0;
-        const MAX_ATTEMPTS = 200;
-
-        while (used.size < NUM_TITLES && attempts < MAX_ATTEMPTS) {
-            attempts++;
-            const tpl = templates[Math.floor(Math.random() * templates.length)];
-            let title = tpl.replace(/\[KEYWORD\]/gi, topic);
-            if (title.length > 60) title = title.slice(0,57) + '...';
-            used.add(title);
+        while(used.size<10){
+            const tpl = templates[Math.floor(Math.random()*templates.length)];
+            used.add(tpl.replace(/\[KEYWORD\]/gi, topic));
         }
-
-        titlesDiv.innerHTML = '';
-        Array.from(used).slice(0, NUM_TITLES).forEach((t, idx) => {
-            const container = document.createElement('div');
-            container.className = 'title-container';
+        titlesDiv.innerHTML='';
+        Array.from(used).forEach((t,idx)=>{
+            const div = document.createElement('div');
+            div.className='title-container';
             const span = document.createElement('span');
-            span.className = 'title-text';
-            span.textContent = `${idx+1}. ${t}`;
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.setAttribute('aria-label','Copy Title');
-            copyBtn.innerHTML = '📋';
-            copyBtn.addEventListener('click',()=>copyToClipboard(t, copyBtn));
-            container.appendChild(span);
-            container.appendChild(copyBtn);
-            titlesDiv.appendChild(container);
+            span.className='title-text';
+            span.textContent=`${idx+1}. ${t}`;
+            const btn=document.createElement('button');
+            btn.className='copy-btn';
+            btn.innerHTML='📋';
+            btn.addEventListener('click',()=>navigator.clipboard.writeText(t).then(()=>{btn.innerHTML='✅';setTimeout(()=>btn.innerHTML='📋',800)}));
+            div.appendChild(span);
+            div.appendChild(btn);
+            titlesDiv.appendChild(div);
         });
     }
 
-    generateBtn.addEventListener('click', generateTitles);
-    topicInput.addEventListener('keydown', (e) => { if(e.key==='Enter'){e.preventDefault();generateTitles();}});
-    applyLanguage();
+    generateBtn.addEventListener('click',generateTitles);
+    resetBtn.addEventListener('click',()=>{
+        topicInput.value='';titlesDiv.innerHTML='';
+    });
+    topicInput.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();generateTitles();}});
 });
 </script>
 </body>

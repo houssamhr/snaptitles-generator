@@ -1,260 +1,248 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">AI Clickbait Title Generator</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        .container {
-            margin: 30px auto;
-            width: 90%;
-            max-width: 700px;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px #00000020;
-        }
-        input {
-            width: 90%;
-            padding: 12px;
-            border: 2px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        button {
-            padding: 12px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        #generateBtn {
-            background: #1a73e8;
-            color: white;
-        }
-        #resetBtn {
-            background: #888;
-            color: white;
-        }
-        .title-box {
-            background: #fafafa;
-            border-left: 4px solid #1a73e8;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 17px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .copy-btn {
-            padding: 6px 10px;
-            border: none;
-            background: #1a73e8;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title id="pageTitle">Snapchat Title Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Bangers&display=swap" rel="stylesheet">
+<style>
+:root{
+    --snap-yellow:#FFFC00;
+    --snap-black:#1E1E1E;
+    --snap-white:#FFFFFF;
+    --background-color:#F8F9FA;
+    --card-color:var(--snap-white);
+    --text-color:var(--snap-black);
+    --shadow-dark:rgba(0,0,0,0.1);
+    --error-color:#ff0000;
+}
+*{box-sizing:border-box}
+body{
+    font-family:'Poppins',sans-serif;
+    max-width:900px;
+    margin:0 auto;
+    padding:30px;
+    background-color:var(--background-color);
+    color:var(--text-color);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+.header{text-align:center;margin-bottom:30px;}
+.logo-generator{display:block;margin:0 auto 10px;width:80px;height:80px;color:var(--snap-yellow)}
+h1{font-family:'Bangers',cursive;color:var(--snap-black);font-size:3em;margin:0;text-shadow:4px 4px 0 var(--snap-yellow),-4px -4px 0 rgba(0,0,0,0.1);line-height:1}
+.lang-selector{ text-align:center; margin-top:20px;margin-bottom:35px;padding:15px;background-color:var(--card-color);border-radius:12px;box-shadow:0 6px 20px var(--shadow-dark) }
+select,input{font-family:'Poppins',sans-serif}
+select{padding:12px 18px;font-size:16px;border-radius:8px;border:2px solid var(--snap-yellow);background-color:var(--card-color);color:var(--text-color);cursor:pointer}
+p{text-align:center;margin:15px 0;font-size:1.1em;font-weight:600}
+input{display:block;width:100%;margin:20px 0;padding:18px;font-size:18px;border:2px solid var(--snap-yellow);border-radius:12px;background-color:var(--card-color);color:var(--text-color);box-sizing:border-box}
+.error{border-color:var(--error-color) !important;animation:shake .5s}
+@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-6px)}100%{transform:translateX(0)}}
+button{display:block;width:100%;padding:18px;font-size:1.2em;font-weight:700;color:var(--snap-black);border:none;border-radius:12px;cursor:pointer;transition:transform .3s,box-shadow .3s;box-shadow:0 6px 0 var(--snap-yellow);margin-bottom:15px;font-family:inherit;background-color:var(--snap-yellow)}
+#generateBtn:hover{transform:translateY(-3px);box-shadow:0 9px 0 #e6e600}
+#generateBtn:active{transform:translateY(3px);box-shadow:0 3px 0 #e6e600}
+#resetBtn{background-color:var(--snap-white);box-shadow:0 6px 0 #ccc;color:var(--snap-black)}
+#resetBtn:hover{transform:translateY(-3px);box-shadow:0 9px 0 #aaa}
+#titles{margin-top:25px}
+.title-container{display:flex;align-items:center;justify-content:space-between;background-color:var(--card-color);padding:16px;margin:12px 0;border-radius:12px;box-shadow:0 6px 20px var(--shadow-dark);border-left:6px solid var(--snap-black);font-size:1.05em;font-weight:600;border-top:2px solid var(--snap-yellow)}
+.title-text{flex-grow:1;text-align:inherit;margin-inline-end:10px}
+.copy-btn{display:block;width:auto;padding:6px;font-size:1.1em;font-weight:700;color:var(--snap-black);border:none;border-radius:50%;cursor:pointer;background-color:var(--snap-yellow);flex-shrink:0}
+.donate-section{text-align:center;margin-top:50px;padding:25px;border-top:1px solid #ddd;background-color:var(--card-color);border-radius:12px;box-shadow:0 6px 20px var(--shadow-dark)}
+@media (max-width:600px){ h1{font-size:2.2em} }
+</style>
 </head>
-
 <body>
-
-<div class="container">
-    <h1 id="mainTitle">AI Clickbait Title Generator</h1>
-    <p id="description">Enter your video topic to generate <b>10 clickbait titles</b> instantly.</p>
-
-    <select id="langSelect" onchange="changeLanguage()">
-        <option value="en">English</option>
-        <option value="ar">العربية</option>
-        <option value="fr">Français</option>
-    </select>
-
-    <br><br>
-
-    <input id="topicInput" placeholder="Enter a topic (e.g., Cat Fails, Makeup Tips)">
-
-    <br>
-
-    <button id="generateBtn">Generate 10 Titles</button>
-    <button id="resetBtn" onclick="resetForm()">Reset</button>
-
-    <div id="titles"></div>
+<div class="header">
+    <svg class="logo-generator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM9 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm6 0c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm-3 8c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/>
+    </svg>
+    <h1 id="mainTitle">Snap Titles AI ⚡️</h1>
 </div>
 
+<div class="lang-selector">
+    <label for="langSelect">🌍 Language: </label>
+    <select id="langSelect">
+        <option value="en">🇺🇸 English</option>
+        <option value="ar">🇸🇦 Arabic</option>
+        <option value="fr">🇫🇷 French</option>
+        <option value="es">🇪🇸 Spanish</option>
+        <option value="de">🇩🇪 German</option>
+        <option value="it">🇮🇹 Italian</option>
+    </select>
+</div>
+
+<p id="description">Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!</p>
+<input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks" maxlength="100" />
+<button id="generateBtn" type="button">Generate 10 Titles</button>
+<button id="resetBtn" type="button">Reset</button>
+<div id="titles"></div>
+
+<div class="donate-section">
+    <p>Support our project and help us create more tools like this! 🙏</p>
+    <button id="donateBtn" type="button" onclick="window.open('https://ko-fi.com/houssamrais', '_blank')">💰 Donate to Support Development</button>
+</div>
 
 <script>
-/* ===========================
-   TRANSLATION DATA
-=========================== */
-const translations = {
-    en: {
-        pageTitle: "AI Clickbait Title Generator",
-        mainTitle: "AI Clickbait Title Generator",
-        description: "Enter your topic to generate 10 clickbait titles.",
-        placeholder: "Enter a topic (e.g., Cat Fails, Makeup Tips)",
-        button: "Generate 10 Titles",
-        reset: "Reset",
-        alert: "Please enter a topic!",
-        topics: {
-            DEFAULT: {
-                emoji: "🔥",
-                templates: [
-                    "You Won't Believe What Happened With [KEYWORD]",
-                    "10 Things Nobody Told You About [KEYWORD]",
-                    "The Secret Behind [KEYWORD] Finally Revealed",
-                    "Why Everyone Is Talking About [KEYWORD]",
-                    "Stop Doing This With [KEYWORD] Immediately",
-                    "The Truth About [KEYWORD] Will Shock You",
-                    "How [KEYWORD] Can Change Your Life",
-                    "Experts Warn About [KEYWORD]",
-                    "Top 10 Facts You Must Know About [KEYWORD]",
-                    "[KEYWORD]: What Nobody Has Told You Before"
-                ]
-            }
+document.addEventListener('DOMContentLoaded', () => {
+    const translations = {
+        en: {
+            pageTitle: "Snapchat Title Generator",
+            mainTitle: "Snap Titles AI ⚡️",
+            description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!",
+            placeholder: "e.g., Magic Tricks, Cooking Hacks",
+            button: "Generate 10 Titles",
+            reset: "Reset",
+            alert: "Please enter a topic!",
+            copied: "Copied!",
         }
-    },
+    };
 
-    ar: {
-        pageTitle: "مولّد العناوين الجذابة",
-        mainTitle: "مولّد العناوين الجذابة",
-        description: "اكتب موضوعك لإنشاء 10 عناوين جذابة.",
-        placeholder: "اكتب موضوع الفيديو (مثال: قطط مضحكة، وصفات سهلة)",
-        button: "إنشاء 10 عناوين",
-        reset: "مسح",
-        alert: "يرجى إدخال موضوع!",
-        topics: {
-            DEFAULT: {
-                emoji: "⚡️",
-                templates: [
-                    "لن تصدّق ما حدث مع [KEYWORD]",
-                    "10 أسرار حول [KEYWORD] لا يعرفها أحد",
-                    "الحقيقة الصادمة وراء [KEYWORD]",
-                    "لماذا يتحدث الجميع عن [KEYWORD]؟",
-                    "توقف عن فعل هذا مع [KEYWORD] فوراً",
-                    "معلومة مهمة عن [KEYWORD] يجب أن تعرفها",
-                    "أفضل 10 أشياء عن [KEYWORD]",
-                    "[KEYWORD]: الحقيقة التي لم يخبرك بها أحد"
-                ]
-            }
-        }
-    },
+    let currentLang = 'en';
 
-    fr: {
-        pageTitle: "Générateur de Titres Clickbait",
-        mainTitle: "Générateur de Titres Clickbait",
-        description: "Entrez votre sujet pour générer 10 titres accrocheurs.",
-        placeholder: "Entrez un sujet (ex: Chats Drôles, Maquillage Facile)",
-        button: "Générer 10 Titres",
-        reset: "Réinitialiser",
-        alert: "Veuillez entrer un sujet !",
-        topics: {
-            DEFAULT: {
-                emoji: "🔥",
-                templates: [
-                    "Vous n'allez pas croire ce qui est arrivé avec [KEYWORD]",
-                    "10 choses que personne ne vous dit sur [KEYWORD]",
-                    "La vérité choquante derrière [KEYWORD]",
-                    "Pourquoi tout le monde parle de [KEYWORD] ?",
-                    "Arrêtez de faire ça avec [KEYWORD] !",
-                    "Le secret de [KEYWORD] enfin révélé",
-                    "[KEYWORD] : Ce que personne ne vous a jamais dit"
-                ]
-            }
-        }
-    }
-};
+    const langSelect = document.getElementById('langSelect');
+    const description = document.getElementById('description');
+    const pageTitle = document.getElementById('pageTitle');
+    const mainTitle = document.getElementById('mainTitle');
+    const topicInput = document.getElementById('topicInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const titlesDiv = document.getElementById('titles');
 
-
-/* ===========================
-   LANGUAGE SWITCHER
-=========================== */
-function changeLanguage() {
-    const lang = document.getElementById("langSelect").value;
-    const L = translations[lang];
-
-    document.getElementById("pageTitle").textContent = L.pageTitle;
-    document.getElementById("mainTitle").textContent = L.mainTitle;
-    document.getElementById("description").textContent = L.description;
-    document.getElementById("topicInput").placeholder = L.placeholder;
-    document.getElementById("generateBtn").textContent = L.button;
-    document.getElementById("resetBtn").textContent = L.reset;
-
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-}
-
-
-/* ===========================
-   RESET
-=========================== */
-function resetForm() {
-    document.getElementById("topicInput").value = "";
-    document.getElementById("titles").innerHTML = "";
-}
-
-
-/* ===========================
-   COPY BUTTON
-=========================== */
-function copyToClipboard(text, btn) {
-    navigator.clipboard.writeText(text);
-    btn.textContent = "✓";
-    setTimeout(() => btn.textContent = "Copy", 600);
-}
-
-
-/* ===========================
-   TITLE GENERATOR (FINAL FIXED VERSION)
-=========================== */
-function generateTitles() {
-    const topic = document.getElementById("topicInput").value.trim();
-    const lang = document.getElementById("langSelect").value;
-    const L = translations[lang];
-
-    if (!topic) {
-        alert(L.alert);
-        return;
+    function applyLanguage() {
+        const L = translations[currentLang];
+        pageTitle.textContent = L.pageTitle;
+        mainTitle.textContent = L.mainTitle;
+        description.textContent = L.description;
+        topicInput.placeholder = L.placeholder;
+        generateBtn.textContent = L.button;
+        resetBtn.textContent = L.reset;
+        const isRTL = currentLang === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.body.style.direction = isRTL ? 'rtl' : 'ltr';
     }
 
-    const output = document.getElementById("titles");
-    output.innerHTML = "";
-
-    const templates = L.topics.DEFAULT.templates;
-    const emoji = L.topics.DEFAULT.emoji;
-
-    const used = new Set();
-
-    while (used.size < 10) {
-        const t = templates[Math.floor(Math.random() * templates.length)];
-        used.add((emoji + " " + t.replace("[KEYWORD]", topic)).trim());
-    }
-
-    used.forEach(title => {
-        const div = document.createElement("div");
-        div.className = "title-box";
-
-        div.innerHTML = `
-            <span>${title}</span>
-            <button class="copy-btn" onclick="copyToClipboard('${title.replace(/'/g, "\\'")}', this)">Copy</button>
-        `;
-
-        output.appendChild(div);
+    langSelect.addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        applyLanguage();
     });
-}
 
+    window.resetForm = function() {
+        topicInput.value = '';
+        titlesDiv.innerHTML = '';
+        topicInput.classList.remove('error');
+    };
+    resetBtn.addEventListener('click', resetForm);
 
-/* Fix: attach event listener */
-document.getElementById("generateBtn").addEventListener("click", generateTitles);
+    function copyToClipboard(text, btn) {
+        if (!navigator.clipboard) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            document.body.removeChild(ta);
+            flashCopy(btn);
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => flashCopy(btn)).catch(() => alert('Failed to copy'));
+    }
+
+    function flashCopy(btn) {
+        const old = btn.innerHTML;
+        btn.innerHTML = '✅';
+        setTimeout(() => btn.innerHTML = old, 900);
+    }
+
+    // Improved topic-to-category detection
+    const CATEGORY_TEMPLATES = {
+        COOK: [
+            "I tried [KEYWORD] recipes for 7 days – you won't believe what happened!",
+            "Stop making [KEYWORD] mistakes! Here's the secret",
+            "The ultimate [KEYWORD] hacks for beginners"
+        ],
+        FITNESS: [
+            "I did [KEYWORD] for 30 days – insane results!",
+            "Stop wasting time – [KEYWORD] tips you need to know",
+            "The [KEYWORD] routine pros use daily"
+        ],
+        GAMING: [
+            "Gamers are exploiting [KEYWORD] like crazy!",
+            "Top 10 [KEYWORD] secrets you missed",
+            "I spent 24 hours in [KEYWORD] – shocking moments!"
+        ],
+        BEAUTY: [
+            "The [KEYWORD] beauty hack everyone should know",
+            "I tried [KEYWORD] products – unbelievable results",
+            "Stop doing [KEYWORD] wrong! Watch this"
+        ],
+        DEFAULT: [
+            "You won't believe what happened with [KEYWORD]!",
+            "Top 10 secrets about [KEYWORD] revealed",
+            "I tried [KEYWORD] for 7 days – shocking!",
+            "[KEYWORD] hacks that change everything",
+            "The truth about [KEYWORD] no one tells you",
+            "Stop ignoring [KEYWORD] tips! Here's why",
+            "Everything you need to know about [KEYWORD]",
+            "Insane results from trying [KEYWORD] once"
+        ]
+    };
+
+    function detectCategory(topic) {
+        const t = topic.toLowerCase();
+        if (t.includes("cook")||t.includes("recipe")||t.includes("food")) return "COOK";
+        if (t.includes("gym")||t.includes("fitness")||t.includes("workout")||t.includes("fat")||t.includes("lose")) return "FITNESS";
+        if (t.includes("game")||t.includes("gaming")||t.includes("play")) return "GAMING";
+        if (t.includes("makeup")||t.includes("beauty")||t.includes("skincare")) return "BEAUTY";
+        return "DEFAULT";
+    }
+
+    function generateTitles() {
+        const L = translations[currentLang];
+        const topic = topicInput.value.trim();
+        if (!topic) {
+            topicInput.classList.add('error');
+            setTimeout(() => topicInput.classList.remove('error'), 500);
+            alert(L.alert);
+            return;
+        }
+
+        const category = detectCategory(topic);
+        const templates = CATEGORY_TEMPLATES[category];
+        const NUM_TITLES = 10;
+        const used = new Set();
+        let attempts = 0;
+        const MAX_ATTEMPTS = 200;
+
+        while (used.size < NUM_TITLES && attempts < MAX_ATTEMPTS) {
+            attempts++;
+            const tpl = templates[Math.floor(Math.random() * templates.length)];
+            let title = tpl.replace(/\[KEYWORD\]/gi, topic);
+            if (title.length > 60) title = title.slice(0,57) + '...';
+            used.add(title);
+        }
+
+        titlesDiv.innerHTML = '';
+        Array.from(used).slice(0, NUM_TITLES).forEach((t, idx) => {
+            const container = document.createElement('div');
+            container.className = 'title-container';
+            const span = document.createElement('span');
+            span.className = 'title-text';
+            span.textContent = `${idx+1}. ${t}`;
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.setAttribute('aria-label','Copy Title');
+            copyBtn.innerHTML = '📋';
+            copyBtn.addEventListener('click',()=>copyToClipboard(t, copyBtn));
+            container.appendChild(span);
+            container.appendChild(copyBtn);
+            titlesDiv.appendChild(container);
+        });
+    }
+
+    generateBtn.addEventListener('click', generateTitles);
+    topicInput.addEventListener('keydown', (e) => { if(e.key==='Enter'){e.preventDefault();generateTitles();}});
+    applyLanguage();
+});
 </script>
-
 </body>
 </html>

@@ -71,7 +71,7 @@ button{display:block;width:100%;padding:18px;font-size:1.2em;font-weight:700;col
     </select>
 </div>
 
-<p id="description">Enter your video topic for 10 AI-powered titles!</p>
+<p id="description">Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!</p>
 <input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks" maxlength="100" />
 <button id="generateBtn" type="button">Generate 10 Titles</button>
 <button id="resetBtn" type="button">Reset</button>
@@ -84,99 +84,248 @@ button{display:block;width:100%;padding:18px;font-size:1.2em;font-weight:700;col
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    const translations = {
+        en: {
+            pageTitle: "Snapchat Title Generator",
+            mainTitle: "Snap Titles AI ⚡️",
+            description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!",
+            placeholder: "e.g., Magic Tricks, Cooking Hacks",
+            button: "Generate 10 Titles",
+            reset: "Reset",
+            alert: "Please enter a topic!",
+        },
+        ar: {
+            pageTitle: "مولد عناوين سناب شات",
+            mainTitle: "عناوين سناب AI ⚡️",
+            description: "أدخل موضوع الفيديو للحصول على 10 عناوين مُولدة بالذكاء الاصطناعي!",
+            placeholder: "مثال: خدع سحرية، وصفات طبخ",
+            button: "توليد 10 عناوين",
+            reset: "إعادة ضبط",
+            alert: "يرجى إدخال الموضوع!",
+        },
+        fr: {
+            pageTitle: "Générateur de titres Snapchat",
+            mainTitle: "Titres Snap AI ⚡️",
+            description: "Entrez le sujet de votre vidéo pour 10 titres générés par IA !",
+            placeholder: "ex: Tours de magie, Astuces cuisine",
+            button: "Générer 10 titres",
+            reset: "Réinitialiser",
+            alert: "Veuillez entrer un sujet !",
+        },
+        es: {
+            pageTitle: "Generador de títulos de Snapchat",
+            mainTitle: "Títulos Snap AI ⚡️",
+            description: "Ingrese el tema de su video para 10 títulos generados por IA!",
+            placeholder: "ej: Trucos de magia, Consejos de cocina",
+            button: "Generar 10 títulos",
+            reset: "Restablecer",
+            alert: "¡Por favor ingrese un tema!",
+        },
+        de: {
+            pageTitle: "Snapchat Titel Generator",
+            mainTitle: "Snap Titel AI ⚡️",
+            description: "Geben Sie Ihr Videothema ein, um 10 KI-generierte Titel zu erhalten!",
+            placeholder: "z.B. Zaubertricks, Koch-Hacks",
+            button: "10 Titel generieren",
+            reset: "Zurücksetzen",
+            alert: "Bitte geben Sie ein Thema ein!",
+        },
+        it: {
+            pageTitle: "Generatore di titoli Snapchat",
+            mainTitle: "Titoli Snap AI ⚡️",
+            description: "Inserisci l'argomento del tuo video per 10 titoli generati dall'AI!",
+            placeholder: "es: Trucchi magici, Consigli di cucina",
+            button: "Genera 10 titoli",
+            reset: "Reimposta",
+            alert: "Per favore inserisci un argomento!",
+        }
+    };
 
-const translations = {
-    en: { pageTitle:"Snapchat Title Generator", mainTitle:"Snap Titles AI ⚡️", description:"Enter your video topic for 10 AI-powered titles!", placeholder:"e.g., Magic Tricks, Cooking Hacks", button:"Generate 10 Titles", reset:"Reset", alert:"Please enter a topic!" },
-    ar: { pageTitle:"مولد عناوين سناب شات", mainTitle:"مولد عناوين سناب AI ⚡️", description:"أدخل موضوع الفيديو للحصول على 10 عناوين مدعومة بالذكاء الاصطناعي!", placeholder:"مثال: خدع سحرية، نصائح طبخ", button:"إنشاء 10 عناوين", reset:"إعادة تعيين", alert:"يرجى إدخال موضوع!" },
-    fr: { pageTitle:"Générateur de Titres Snapchat", mainTitle:"Générateur de Titres AI ⚡️", description:"Entrez votre sujet pour 10 titres boostés par l'IA !", placeholder:"ex. : Tours de Magie, Astuces Cuisine", button:"Générer 10 Titres", reset:"Réinitialiser", alert:"Veuillez entrer un sujet !" },
-    es: { pageTitle:"Generador de Títulos Snapchat", mainTitle:"Generador de Títulos AI ⚡️", description:"¡Ingresa tu tema para 10 títulos impulsados por IA!", placeholder:"ej. : Trucos de Magia, Consejos de Cocina", button:"Generar 10 Títulos", reset:"Restablecer", alert:"¡Por favor ingresa un tema!" },
-    de: { pageTitle:"Snapchat Titel Generator", mainTitle:"Snap Titel AI ⚡️", description:"Gib dein Thema ein für 10 KI-gestützte Titel!", placeholder:"z.B. Zaubertricks, Kochtipps", button:"10 Titel Generieren", reset:"Zurücksetzen", alert:"Bitte gib ein Thema ein!" },
-    it: { pageTitle:"Generatore di Titoli Snapchat", mainTitle:"Snap Titoli AI ⚡️", description:"Inserisci il tuo argomento per 10 titoli basati sull'IA!", placeholder:"es. Trucchi Magici, Consigli Cucina", button:"Genera 10 Titoli", reset:"Ripristina", alert:"Per favore inserisci un argomento!" }
-};
+    let currentLang = 'en';
+    const langSelect = document.getElementById('langSelect');
+    const description = document.getElementById('description');
+    const pageTitle = document.getElementById('pageTitle');
+    const mainTitle = document.getElementById('mainTitle');
+    const topicInput = document.getElementById('topicInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const titlesDiv = document.getElementById('titles');
 
-// Default templates fallback for all languages
-const DEFAULT_TEMPLATES = {
-    en:["You won't believe what happened with [KEYWORD]!","Top 10 secrets about [KEYWORD] revealed","I tried [KEYWORD] for 7 days – shocking!","[KEYWORD] hacks that change everything","The truth about [KEYWORD] no one tells you","Stop ignoring [KEYWORD] tips! Here's why","Everything you need to know about [KEYWORD]","Insane results from trying [KEYWORD] once"],
-    ar:["لن تصدق ما حدث مع [KEYWORD]!","أفضل 10 أسرار عن [KEYWORD] مكشوفة","جربت [KEYWORD] لمدة 7 أيام – صادم!","حيل [KEYWORD] التي تغير كل شيء","الحقيقة عن [KEYWORD] التي لا يخبرك بها أحد","توقف عن تجاهل نصائح [KEYWORD]! إليك السبب","كل ما تحتاج معرفته عن [KEYWORD]","نتائج مذهلة من تجربة [KEYWORD] مرة واحدة"],
-    fr:["Vous ne croirez pas ce qui s'est passé avec [KEYWORD] !","Top 10 des secrets sur [KEYWORD] révélés","J'ai essayé [KEYWORD] pendant 7 jours – choquant !","Astuces [KEYWORD] qui changent tout","La vérité sur [KEYWORD] que personne ne vous dit","Arrêtez d'ignorer les conseils sur [KEYWORD] !","Tout ce que vous devez savoir sur [KEYWORD]","Résultats incroyables en essayant [KEYWORD] une fois"],
-    es:["¡No creerás lo que pasó con [KEYWORD]!","Top 10 secretos sobre [KEYWORD] revelados","Probé [KEYWORD] durante 7 días – ¡impactante!","Trucos de [KEYWORD] que lo cambian todo","La verdad sobre [KEYWORD] que nadie te dice","Deja de ignorar consejos sobre [KEYWORD]","Todo lo que necesitas saber sobre [KEYWORD]","Resultados increíbles al probar [KEYWORD]"],
-    de:["Du wirst nicht glauben, was mit [KEYWORD] passiert ist!","Top 10 Geheimnisse über [KEYWORD] enthüllt","Ich habe [KEYWORD] 7 Tage ausprobiert – schockierend!","[KEYWORD] Hacks, die alles verändern","Die Wahrheit über [KEYWORD], die niemand erzählt","Hör auf, [KEYWORD] Tipps zu ignorieren!","Alles, was du über [KEYWORD] wissen musst","Wahnsinnige Ergebnisse durch einmaliges Ausprobieren von [KEYWORD]"],
-    it:["Non crederai a cosa è successo con [KEYWORD]!","Top 10 segreti su [KEYWORD] rivelati","Ho provato [KEYWORD] per 7 giorni – scioccante!","Trucchi [KEYWORD] che cambiano tutto","La verità su [KEYWORD] che nessuno ti dice","Smetti di ignorare i consigli su [KEYWORD]!","Tutto quello che devi sapere su [KEYWORD]","Risultati folli provando [KEYWORD] una volta"]
-};
-
-let currentLang='en';
-const langSelect = document.getElementById('langSelect');
-const description = document.getElementById('description');
-const pageTitle = document.getElementById('pageTitle');
-const mainTitle = document.getElementById('mainTitle');
-const topicInput = document.getElementById('topicInput');
-const generateBtn = document.getElementById('generateBtn');
-const resetBtn = document.getElementById('resetBtn');
-const titlesDiv = document.getElementById('titles');
-
-function applyLanguage(){
-    const L = translations[currentLang];
-    pageTitle.textContent = L.pageTitle;
-    mainTitle.textContent = L.mainTitle;
-    description.textContent = L.description;
-    topicInput.placeholder = L.placeholder;
-    generateBtn.textContent = L.button;
-    resetBtn.textContent = L.reset;
-    const isRTL = currentLang==='ar';
-    document.documentElement.dir = isRTL?'rtl':'ltr';
-    document.body.style.direction = isRTL?'rtl':'ltr';
-}
-
-langSelect.addEventListener('change', e=>{
-    currentLang = e.target.value;
-    applyLanguage();
-    topicInput.value='';
-    titlesDiv.innerHTML='';
-});
-
-resetBtn.addEventListener('click', ()=>{
-    topicInput.value='';
-    titlesDiv.innerHTML='';
-    topicInput.classList.remove('error');
-});
-
-function copyToClipboard(text, btn){
-    if(!navigator.clipboard){
-        const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(_){}
-        document.body.removeChild(ta); flashCopy(btn); return;
+    function applyLanguage() {
+        const L = translations[currentLang];
+        pageTitle.textContent = L.pageTitle;
+        mainTitle.textContent = L.mainTitle;
+        description.textContent = L.description;
+        topicInput.placeholder = L.placeholder;
+        generateBtn.textContent = L.button;
+        resetBtn.textContent = L.reset;
+        const isRTL = currentLang === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.body.style.direction = isRTL ? 'rtl' : 'ltr';
     }
-    navigator.clipboard.writeText(text).then(()=>flashCopy(btn)).catch(()=>alert('Failed to copy'));
-}
 
-function flashCopy(btn){ const old=btn.innerHTML; btn.innerHTML='✅'; setTimeout(()=>btn.innerHTML=old,900); }
-
-function generateTitles(){
-    const topic = topicInput.value.trim();
-    if(!topic){topicInput.classList.add('error'); setTimeout(()=>topicInput.classList.remove('error'),500); alert(translations[currentLang].alert); return;}
-    const templates = DEFAULT_TEMPLATES[currentLang] || DEFAULT_TEMPLATES['en'];
-    const NUM_TITLES=10, used=new Set(), MAX_ATTEMPTS=200;
-    let attempts=0;
-    while(used.size<NUM_TITLES && attempts<MAX_ATTEMPTS){
-        attempts++;
-        let tpl = templates[Math.floor(Math.random()*templates.length)];
-        let title = tpl.replace(/\[KEYWORD\]/gi, topic);
-        if(title.length>60) title=title.slice(0,57)+'...';
-        used.add(title);
-    }
-    titlesDiv.innerHTML='';
-    Array.from(used).slice(0,NUM_TITLES).forEach((t,idx)=>{
-        const container=document.createElement('div'); container.className='title-container';
-        const span=document.createElement('span'); span.className='title-text'; span.textContent=`${idx+1}. ${t}`;
-        const copyBtn=document.createElement('button'); copyBtn.className='copy-btn'; copyBtn.setAttribute('aria-label','Copy Title'); copyBtn.innerHTML='📋';
-        copyBtn.addEventListener('click',()=>copyToClipboard(t,copyBtn));
-        container.appendChild(span); container.appendChild(copyBtn); titlesDiv.appendChild(container);
+    langSelect.addEventListener('change', (e) => {
+        currentLang = e.target.value;
+        applyLanguage();
     });
-}
 
-generateBtn.addEventListener('click', generateTitles);
-topicInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){e.preventDefault(); generateTitles(); }});
-applyLanguage();
+    window.resetForm = function() {
+        topicInput.value = '';
+        titlesDiv.innerHTML = '';
+        topicInput.classList.remove('error');
+    };
+    resetBtn.addEventListener('click', resetForm);
 
+    function copyToClipboard(text, btn) {
+        if (!navigator.clipboard) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); } catch (_) {}
+            document.body.removeChild(ta);
+            flashCopy(btn);
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => flashCopy(btn)).catch(() => alert('Failed to copy'));
+    }
+
+    function flashCopy(btn) {
+        const old = btn.innerHTML;
+        btn.innerHTML = '✅';
+        setTimeout(() => btn.innerHTML = old, 900);
+    }
+
+    // Dynamic title patterns per language
+    const TITLE_PATTERNS = {
+        en: [
+            "[KEYWORD] revealed – you won't believe it!",
+            "Top 10 [KEYWORD] secrets",
+            "I tried [KEYWORD] for 7 days – shocking results!",
+            "Stop doing [KEYWORD] wrong – do this instead!",
+            "Everything you need to know about [KEYWORD]",
+            "[KEYWORD] hacks that change everything",
+            "The truth about [KEYWORD] no one tells you",
+            "Why [KEYWORD] is trending right now",
+            "How [KEYWORD] changed my life",
+            "Insane results after trying [KEYWORD]"
+        ],
+        ar: [
+            "اكتشف [KEYWORD] – لن تصدق ما حدث!",
+            "أفضل 10 أسرار عن [KEYWORD]",
+            "جربت [KEYWORD] لمدة 7 أيام – النتائج مذهلة!",
+            "توقف عن التعامل مع [KEYWORD] بهذه الطريقة – جرب هذا!",
+            "كل ما تحتاج معرفته عن [KEYWORD]",
+            "حيل [KEYWORD] التي تغير كل شيء",
+            "الحقيقة عن [KEYWORD] التي لا يخبرك بها أحد",
+            "لماذا [KEYWORD] أصبحت رائجة الآن",
+            "كيف غيّر [KEYWORD] حياتي",
+            "نتائج مذهلة بعد تجربة [KEYWORD]"
+        ],
+        fr: [
+            "[KEYWORD] révélé – vous n'allez pas le croire !",
+            "Top 10 secrets sur [KEYWORD]",
+            "J'ai essayé [KEYWORD] pendant 7 jours – résultats choquants !",
+            "Arrêtez de mal faire [KEYWORD] – faites ceci à la place !",
+            "Tout ce que vous devez savoir sur [KEYWORD]",
+            "Astuces [KEYWORD] qui changent tout",
+            "La vérité sur [KEYWORD] que personne ne vous dit",
+            "Pourquoi [KEYWORD] est tendance maintenant",
+            "Comment [KEYWORD] a changé ma vie",
+            "Résultats incroyables après avoir essayé [KEYWORD]"
+        ],
+        es: [
+            "[KEYWORD] revelado – ¡no lo creerás!",
+            "Top 10 secretos sobre [KEYWORD]",
+            "Probé [KEYWORD] durante 7 días – ¡resultados sorprendentes!",
+            "Deja de hacer [KEYWORD] mal – haz esto en su lugar!",
+            "Todo lo que necesitas saber sobre [KEYWORD]",
+            "Trucos de [KEYWORD] que lo cambian todo",
+            "La verdad sobre [KEYWORD] que nadie te dice",
+            "Por qué [KEYWORD] está de moda ahora",
+            "Cómo [KEYWORD] cambió mi vida",
+            "Resultados increíbles después de probar [KEYWORD]"
+        ],
+        de: [
+            "[KEYWORD] enthüllt – du wirst es nicht glauben!",
+            "Top 10 Geheimnisse über [KEYWORD]",
+            "Ich habe [KEYWORD] 7 Tage ausprobiert – schockierende Ergebnisse!",
+            "Hör auf, [KEYWORD] falsch zu machen – mach stattdessen das!",
+            "Alles, was du über [KEYWORD] wissen musst",
+            "[KEYWORD] Hacks, die alles verändern",
+            "Die Wahrheit über [KEYWORD], die dir niemand erzählt",
+            "Warum [KEYWORD] gerade im Trend liegt",
+            "Wie [KEYWORD] mein Leben verändert hat",
+            "Unglaubliche Ergebnisse nach dem Testen von [KEYWORD]"
+        ],
+        it: [
+            "[KEYWORD] rivelato – non ci crederai!",
+            "Top 10 segreti su [KEYWORD]",
+            "Ho provato [KEYWORD] per 7 giorni – risultati sorprendenti!",
+            "Smettila di fare male [KEYWORD] – prova così!",
+            "Tutto quello che devi sapere su [KEYWORD]",
+            "Trucchi [KEYWORD] che cambiano tutto",
+            "La verità su [KEYWORD] che nessuno ti dice",
+            "Perché [KEYWORD] è di tendenza ora",
+            "Come [KEYWORD] ha cambiato la mia vita",
+            "Risultati incredibili dopo aver provato [KEYWORD]"
+        ]
+    };
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function generateDynamicTitles(topic, numTitles = 10) {
+        const patterns = TITLE_PATTERNS[currentLang];
+        const titles = [];
+        for (let i = 0; i < numTitles; i++) {
+            const pattern1 = patterns[Math.floor(Math.random() * patterns.length)];
+            const pattern2 = patterns[Math.floor(Math.random() * patterns.length)];
+            let title = Math.random() < 0.5 ? pattern1 : `${pattern1} | ${pattern2}`;
+            title = title.replace(/\[KEYWORD\]/gi, topic);
+            if (title.length > 65) title = title.slice(0, 62) + '...';
+            titles.push(title);
+        }
+        return titles;
+    }
+
+    function generateTitles() {
+        const L = translations[currentLang];
+        const topic = topicInput.value.trim();
+        if (!topic) {
+            topicInput.classList.add('error');
+            setTimeout(() => topicInput.classList.remove('error'), 500);
+            alert(L.alert);
+            return;
+        }
+
+        const titles = generateDynamicTitles(topic, 10);
+        titlesDiv.innerHTML = '';
+        titles.forEach((t, idx) => {
+            const container = document.createElement('div');
+            container.className = 'title-container';
+            const span = document.createElement('span');
+            span.className = 'title-text';
+            span.textContent = `${idx+1}. ${t}`;
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.setAttribute('aria-label','Copy Title');
+            copyBtn.innerHTML = '📋';
+            copyBtn.addEventListener('click',()=>copyToClipboard(t, copyBtn));
+            container.appendChild(span);
+            container.appendChild(copyBtn);
+            titlesDiv.appendChild(container);
+        });
+    }
+
+    generateBtn.addEventListener('click', generateTitles);
+    topicInput.addEventListener('keydown', (e) => { if(e.key==='Enter'){e.preventDefault();generateTitles();}});
+    applyLanguage();
 });
 </script>
 </body>

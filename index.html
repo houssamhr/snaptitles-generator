@@ -336,7 +336,6 @@
 </head>
 <body>
     <div class="header">
-        <!-- Title Generator Icon SVG (Simple text document with lines) -->
         <svg class="logo-generator" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
             <line x1="7" y1="7" x2="17" y2="7" stroke="currentColor" stroke-width="2"/>
@@ -374,7 +373,7 @@
     </div>
 
     <script>
-        // Translations and word pools (enhanced with more variety)
+        // Translations and word pools (FIXED: Completed truncated data and added missing keys)
         const translations = {
             en: {
                 pageTitle: "Snapchat Clickbait Title Generator",
@@ -415,7 +414,7 @@
                 adjectives: ["Épique", "Secret", "Fou", "Caché", "Ultime", "Dingue", "Époustouflant", "Choquant"],
                 phrases: ["Secrets Maintenant !", "Astuces Révélées !", "Magie se Déroule !", "Conseils Aujourd'hui !", "Trucs Exposés !", "Pouvoir Débloqué !", "Révéler !", "Découvert !"]
             },
-            es: {
+            es: { // FIXED: Was truncated here
                 pageTitle: "Generador de Títulos Clickbait de Snapchat",
                 mainTitle: "Generador de Títulos Clickbait de Snapchat",
                 description: "Ingresa un título de video o tema, y obtén cuatro títulos atractivos en menos de 50 caracteres!",
@@ -426,4 +425,142 @@
                 copied: "¡Copiado al portapapeles!",
                 verbs: ["Desvela", "Descubre", "Domina", "Revela", "Desbloquea", "Explora", "Enciende", "Transforma"],
                 adjectives: ["Épico", "Secreto", "Loco", "Oculto", "Definitivo", "Chiflado", "Alucinante", "Impactante"],
-                phrases: ["¡Secretos Ahora!", "¡Trucos Revelados!", "¡Magia se Despliega!", "¡Consejos Hoy!", "¡Trucos Expuestos!",
+                phrases: ["¡Secretos Ahora!", "¡Trucos Revelados!", "¡Magia se Despliega!", "¡Consejos Hoy!", "¡Trucos Expuestos!", "¡Poder Desbloqueado!", "Revelado!", "Descubierto!"]
+            },
+            de: {
+                pageTitle: "Snapchat Clickbait-Titel-Generator",
+                mainTitle: "Snapchat Clickbait-Titel-Generator",
+                description: "Gib einen Videotitel oder ein Thema ein und erhalte vier ansprechende Clickbait-Titel unter 50 Zeichen!",
+                placeholder: "z.B. Zaubertricks, Kochtipps",
+                button: "Titel Generieren",
+                reset: "Zurücksetzen",
+                alert: "Bitte gib ein Thema ein!",
+                copied: "In die Zwischenablage kopiert!",
+                verbs: ["Enthülle", "Entdecke", "Beherrsche", "Offenbare", "Entsperre", "Erkunde", "Entzünde", "Verwandle"],
+                adjectives: ["Episch", "Geheim", "Verrückt", "Versteckt", "Ultimativ", "Wahnsinnig", "Umwerfend", "Schockierend"],
+                phrases: ["Geheimnisse Jetzt!", "Hacks Aufgedeckt!", "Magie Entfaltet!", "Tipps Heute!", "Tricks Enthüllt!", "Kraft Freigesetzt!", "Enthüllt!", "Aufgedeckt!"]
+            },
+            it: {
+                pageTitle: "Generatore di Titoli Clickbait Snapchat",
+                mainTitle: "Generatore di Titoli Clickbait Snapchat",
+                description: "Inserisci un titolo video o un argomento e ottieni quattro titoli accattivanti sotto 50 caratteri!",
+                placeholder: "es. Trucchi Magici, Consigli Cucina",
+                button: "Genera Titoli",
+                reset: "Ripristina",
+                alert: "Per favore inserisci un argomento!",
+                copied: "Copiato negli appunti!",
+                verbs: ["Svela", "Scopri", "Padroneggia", "Rivela", "Sblocca", "Esplora", "Accendi", "Trasforma"],
+                adjectives: ["Epico", "Segreto", "Pazzo", "Nascosto", "Definitivo", "Folle", "Sbalorditivo", "Scioccante"],
+                phrases: ["Segreti Ora!", "Trucchi Rivelati!", "Magia si Svolge!", "Consigli Oggi!", "Trucchi Esposti!", "Potere Sbloccato!", "Rivelato!", "Scoperto!"]
+            }
+        };
+
+        let currentLang = 'en';
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            const langData = translations[currentLang];
+
+            // Update page elements
+            document.getElementById('pageTitle').textContent = langData.pageTitle;
+            document.getElementById('mainTitle').textContent = langData.mainTitle;
+            document.getElementById('description').textContent = langData.description;
+            document.getElementById('topicInput').placeholder = langData.placeholder;
+            document.getElementById('generateBtn').textContent = langData.button;
+            document.getElementById('resetBtn').textContent = langData.reset; // Updated reset button
+
+            // Switch to RTL for Arabic
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.body.style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+        }
+
+        // FIX: Added missing function to reset the form
+        function resetForm() {
+            document.getElementById('topicInput').value = '';
+            document.getElementById('titles').innerHTML = '';
+            document.getElementById('topicInput').classList.remove('error');
+        }
+
+        // FIX: Added function to handle copying to clipboard with visual feedback
+        function copyToClipboard(text, buttonElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalContent = buttonElement.innerHTML;
+                buttonElement.innerHTML = '✅'; // Success Feedback
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalContent;
+                }, 1000);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+                alert('Error copying text. Check console.');
+            });
+        }
+        
+        // FIX: Reworked logic to match the new CSS structure (.title-container)
+        function generateTitles() {
+            const inputElement = document.getElementById('topicInput');
+            const topic = inputElement.value.trim();
+            const langData = translations[currentLang];
+
+            if (!topic) {
+                inputElement.classList.add('error');
+                setTimeout(() => inputElement.classList.remove('error'), 500);
+                alert(langData.alert);
+                return;
+            }
+            inputElement.classList.remove('error'); // Clear error on successful input
+
+            const titles = [];
+            const titlesSet = new Set();
+            const keyWords = topic.split(' ');
+            const keyWord = keyWords.length > 1 ? keyWords.slice(0, 2).join(' ') : keyWords[0];
+            const maxAttempts = 20;
+            let attempts = 0;
+
+            while (titles.length < 4 && attempts < maxAttempts) {
+                attempts++;
+                const verb = langData.verbs[Math.floor(Math.random() * langData.verbs.length)];
+                const adjective = langData.adjectives[Math.floor(Math.random() * langData.adjectives.length)];
+                const phrase = langData.phrases[Math.floor(Math.random() * langData.phrases.length)];
+
+                let title = `${verb} ${adjective} ${keyWord} ${phrase}`;
+
+                if (title.length > 50) {
+                    title = title.substring(0, 47) + '...';
+                }
+
+                if (!titlesSet.has(title)) {
+                    titlesSet.add(title);
+                    titles.push(title);
+                }
+            }
+
+            const titlesDiv = document.getElementById('titles');
+            titlesDiv.innerHTML = '';
+            titles.forEach((title, index) => {
+                const container = document.createElement('div');
+                container.className = 'title-container';
+
+                const textSpan = document.createElement('span');
+                textSpan.className = 'title-text';
+                textSpan.textContent = `${index + 1}. ${title}`;
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.innerHTML = '📋'; // Clipboard icon
+                
+                // Pass the clean title text and the button element itself for visual feedback
+                const cleanTitle = title.replace(/"/g, '\\"');
+                copyBtn.setAttribute('onclick', `copyToClipboard('${cleanTitle}', this)`);
+                copyBtn.setAttribute('aria-label', 'Copy Title');
+
+                container.appendChild(textSpan);
+                container.appendChild(copyBtn);
+                titlesDiv.appendChild(container);
+            });
+        }
+
+        // Initialize with English
+        changeLanguage();
+    </script>
+</body>
+</html>

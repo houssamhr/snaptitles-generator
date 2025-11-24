@@ -238,7 +238,7 @@
     <button id="resetBtn" onclick="resetForm()">Reset</button>
     <div id="titles"></div>
 
-   <div class="donate-section">
+    <div class="donate-section">
         <p>Support our project and help us create more tools like this! 🙏</p>
         
         <button 
@@ -249,39 +249,93 @@
             💰 Donate to Support Development
         </button>
     </div>
-    <script>
-        // --- AI (Topic Mapping) Engine ---
-        // This object maps common video topics to their specific, safe emojis and title templates.
-        const topicMap = {
-            "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMATE [KEYWORD] HACKS YOU NEED!", "EASY [KEYWORD] RECIPES that broke the Internet! 💯", "The [KEYWORD] Secret that changed my life! 🤫", "STOP making [KEYWORD] mistakes like this! 🙅‍♀️"] },
-            "FITNESS": { emoji: "💪🔥", templates: ["5-MIN [KEYWORD] That Burn MAX Fat! 🔥", "The [KEYWORD] Secret To INSANE Abs! 🏆", "This is how [KEYWORD] pros train NOW! ⚡️", "INSTANT [KEYWORD] RESULTS?! Shocking! 🤯"] },
-            "GAMING": { emoji: "🎮🔥", templates: ["This [KEYWORD] STRATEGY is broken! 🤯", "The CRAZIEST [KEYWORD] Moments of the week! 😱", "My SECRET [KEYWORD] settings revealed! 🤫", "10 things NO ONE tells you about [KEYWORD] 😲"] },
-            "BEAUTY": { emoji: "💄✨", templates: ["[KEYWORD] TRANSFORMATION that blew my mind! 💖", "EASY [KEYWORD] Tricks for Beginners! 💅", "Must-HAVE [KEYWORD] HACKS for perfect skin! 🤩", "The ONLY [KEYWORD] products worth buying! 💸"] },
-            "MAGIC": { emoji: "🪄🔮", templates: ["SECRET [KEYWORD] REVEALED! You won't believe it! 🤫", "I Can't Believe This [KEYWORD] Trick Works! 🤯", "The Easiest [KEYWORD] Illusion Ever! 🤩", "Crazy [KEYWORD] That Will SHOCK You! 😱"] },
-            "PETS": { emoji: "🐶🐱", templates: ["CRAZY [KEYWORD] Fails That Went Viral! 🤣", "10 WAYS to make your [KEYWORD] love you more! ❤️", "The FUNNIEST [KEYWORD] videos on the internet! 😂", "This [KEYWORD] is smarter than you think! 🧐"] },
-            "TRAVEL": { emoji: "✈️🏝️", templates: ["MUST-SEE [KEYWORD] Destinations for 2024! 🌎", "My [KEYWORD] BUDGET HACKS nobody uses! 💰", "You NEED to go to this [KEYWORD] spot! 📍", "DON'T travel to [KEYWORD] before watching this! 🛑"] },
-            "DEFAULT": { emoji: "✨🔥", templates: ["🤯 The [KEYWORD] Truth Nobody Tells You! 🤫", "You Won't BELIEVE What Happened Next! 😱", "The Ultimate [KEYWORD] Guide for BEGINNERS! 💯", "This [KEYWORD] CHANGED EVERYTHING! 🚀"] }
-        };
 
-        // --- Standard Translations & Functions ---
+    <script>
+        // --- Standard Translations & Word Pools (UPDATED FOR GENERATION) ---
         const translations = {
             en: {
-                pageTitle: "AI Clickbait Title Generator", mainTitle: "AI Title Generator ⚡️", description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!", placeholder: "e.g., Magic Tricks, Cooking Hacks", button: "Generate Titles", reset: "Reset", alert: "Please enter a topic!", copied: "Copied!"
+                pageTitle: "AI Clickbait Title Generator",
+                mainTitle: "AI Title Generator ⚡️",
+                description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!",
+                placeholder: "e.g., Magic Tricks, Cooking Hacks",
+                button: "Generate Titles",
+                reset: "Reset",
+                alert: "Please enter a topic!",
+                copied: "Copied!",
+                // Words for title generation
+                verbs: ["🤯 ULTIMATE", "EASY", "The SECRET", "STOP"],
+                adjectives: ["HACKS YOU NEED!", "RECIPES that broke the Internet! 💯", "Secret that changed my life! 🤫", "making mistakes like this! 🙅‍♀️"],
+                phrases: ["🔥", "🏆", "⚡️", "😲"] // Emojis/Short phrases
             },
             ar: {
-                pageTitle: "مولد عناوين بالذكاء الاصطناعي", mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️", description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!", placeholder: "مثال: خدع سحرية، نصائح طبخ", button: "إنشاء العناوين", reset: "إعادة تعيين", alert: "يرجى إدخال موضوع!", copied: "تم النسخ!"
+                pageTitle: "مولد عناوين بالذكاء الاصطناعي",
+                mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️",
+                description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!",
+                placeholder: "مثال: خدع سحرية، نصائح طبخ",
+                button: "إنشاء العناوين",
+                reset: "إعادة تعيين",
+                alert: "يرجى إدخال موضوع!",
+                copied: "تم النسخ!",
+                // الكلمات لتوليد العناوين (Words for title generation)
+                verbs: ["🤯 أفضل", "سهل", "السر", "توقف عن"],
+                adjectives: ["طرق تحتاجها!", "وصفات اجتاحت الإنترنت! 💯", "السر الذي غير حياتي! 🤫", "ارتكاب أخطاء كهذه! 🙅‍♀️"],
+                phrases: ["🔥", "🏆", "⚡️", "😲"]
             },
             fr: {
-                pageTitle: "Générateur de Titres IA", mainTitle: "Générateur de Titres IA ⚡️", description: "Entrez votre sujet (ex. : Tours de Magie) pour 4 titres boostés par l'IA !", placeholder: "ex. : Tours de Magie, Astuces Cuisine", button: "Générer les Titres", reset: "Réinitialiser", alert: "Veuillez entrer un sujet !", copied: "Copié !"
+                pageTitle: "Générateur de Titres IA",
+                mainTitle: "Générateur de Titres IA ⚡️",
+                description: "Entrez votre sujet (ex. : Tours de Magie) pour 4 titres boostés par l'IA !",
+                placeholder: "ex. : Tours de Magie, Astuces Cuisine",
+                button: "Générer les Titres",
+                reset: "Réinitialiser",
+                alert: "Veuillez entrer un sujet !",
+                copied: "Copié !",
+                // Mots pour la génération de titres
+                verbs: ["🤯 ULTIME", "FACILE", "Le SECRET", "ARRÊTEZ de"],
+                adjectives: ["ASTUCES dont vous avez besoin!", "RECETTES qui ont explosé Internet! 💯", "Secret qui a changé ma vie! 🤫", "faire ces erreurs! 🙅‍♀️"],
+                phrases: ["🔥", "🏆", "⚡️", "😲"]
             },
             es: {
-                pageTitle: "Generador de Títulos IA", mainTitle: "Generador de Títulos IA ⚡️", description: "¡Ingresa tu tema para 4 títulos impulsados por IA!", placeholder: "ej. : Trucos de Magia, Consejos de Cocina", button: "Generar Títulos", reset: "Restablecer", alert: "¡Por favor ingresa un tema!", copied: "¡Copiado!"
+                pageTitle: "Generador de Títulos IA",
+                mainTitle: "Generador de Títulos IA ⚡️",
+                description: "¡Ingresa tu tema para 4 títulos impulsados por IA!",
+                placeholder: "ej. : Trucos de Magia, Consejos de Cocina",
+                button: "Generar Títulos",
+                reset: "Restablecer",
+                alert: "¡Por favor ingresa un tema!",
+                copied: "¡Copiado!",
+                // Palabras para la generación de títulos
+                verbs: ["🤯 LO MEJOR", "FÁCIL", "El SECRETO", "DEJA de"],
+                adjectives: ["TRUCOS que necesitas!", "RECETAS que rompieron el Internet! 💯", "Secreto que cambió mi vida! 🤫", "cometer errores como este! 🙅‍♀️"],
+                phrases: ["🔥", "🏆", "⚡️", "😲"]
             },
             de: {
-                pageTitle: "KI-Titel-Generator", mainTitle: "KI-Titel-Generator ⚡️", description: "Gib dein Thema ein (z.B. Kochtipps) für 4 KI-gestützte Titel!", placeholder: "z.B. Zaubertricks, Kochtipps", button: "Titel Generieren", reset: "Zurücksetzen", alert: "Bitte gib ein Thema ein!", copied: "Kopiert!"
+                pageTitle: "KI-Titel-Generator",
+                mainTitle: "KI-Titel-Generator ⚡️",
+                description: "Gib dein Thema ein (z.B. Kochtipps) für 4 KI-gestützte Titel!",
+                placeholder: "z.B. Zaubertricks, Kochtipps",
+                button: "Titel Generieren",
+                reset: "Zurücksetzen",
+                alert: "Bitte gib ein Thema ein!",
+                copied: "Kopiert!",
+                // Wörter für die Titelgenerierung
+                verbs: ["🤯 ULTIMATIVE", "EINFACHE", "Das GEHEIMNIS", "HÖRE auf"],
+                adjectives: ["HACKS die du brauchst!", "REZEPTE die das Internet gesprengt haben! 💯", "Geheimnis das mein Leben verändert hat! 🤫", "diese Fehler zu machen! 🙅‍♀️"],
+                phrases: ["🔥", "🏆", "⚡️", "😲"]
             },
             it: {
-                pageTitle: "Generatore di Titoli IA", mainTitle: "Generatore di Titoli IA ⚡️", description: "Inserisci il tuo argomento per 4 titoli basati sull'IA!", placeholder: "es. Trucchi Magici, Consigli Cucina", button: "Genera Titoli", reset: "Ripristina", alert: "Per favore inserisci un argomento!", copied: "Copiato!"
+                pageTitle: "Generatore di Titoli IA",
+                mainTitle: "Generatore di Titoli IA ⚡️",
+                description: "Inserisci il tuo argomento per 4 titoli basati sull'IA!",
+                placeholder: "es. Trucchi Magici, Consigli Cucina",
+                button: "Genera Titoli",
+                reset: "Ripristina",
+                alert: "Per favore inserisci un argomento!",
+                copied: "Copiato!",
+                // Parole per la generazione di titoli
+                verbs: ["🤯 ULTIMO", "FACILE", "Il SEGRETO", "SMETTI di"],
+                adjectives: ["TRUCCHI di cui hai bisogno!", "RICETTE che hanno sconvolto Internet! 💯", "Segreto che ha cambiato la mia vita! 🤫", "fare questi errori! 🙅‍♀️"],
+                phrases: ["🔥", "🏆", "⚡️", "😲"]
             }
         };
 
@@ -314,16 +368,16 @@
                 const originalContent = buttonElement.innerHTML;
                 buttonElement.innerHTML = `✅ ${langData.copied}`;
                 setTimeout(() => {
-                    buttonElement.innerHTML = originalContent;
+                    buttonElement.innerHTML = '📋'; // Reset to clipboard icon
                 }, 1000);
             });
         }
         
-        // --- NEW CORE GENERATION LOGIC ---
+        // --- CORRECTED GENERATION LOGIC ---
         function generateTitles() {
             const inputElement = document.getElementById('topicInput');
             const topic = inputElement.value.trim();
-            const langData = translations[currentLang];
+            const langData = translations[currentLang]; // Get the data for the selected language
 
             if (!topic) {
                 inputElement.classList.add('error');
@@ -335,42 +389,33 @@
 
             const titles = [];
             const titlesSet = new Set();
-            const topicUpper = topic.toUpperCase();
-            const keyWords = topic.split(' ');
-
-            // 1. Identify Best Topic Match (AI-like classification)
-            let bestTopic = topicMap.DEFAULT;
-            let topicName = "Topic";
             
-            for (const key in topicMap) {
-                if (topicUpper.includes(key)) {
-                    bestTopic = topicMap[key];
-                    topicName = key;
-                    break; 
-                }
-            }
-
-            // Fallback for keyWord extraction (use first two words of input)
-            const keywordToInsert = keyWords.slice(0, 2).join(' ');
+            // Use the first word as the main keyword to insert into templates
+            const keywordToInsert = topic.split(' ')[0].toUpperCase(); 
 
             const maxAttempts = 20;
             let attempts = 0;
 
-            // 2. Generate 4 unique titles from topic-specific templates
+            // The number of available template slots is the minimum length of the three arrays
+            const numTemplates = Math.min(langData.verbs.length, langData.adjectives.length, langData.phrases.length);
+
+            // Generate 4 unique titles
             while (titles.length < 4 && attempts < maxAttempts) {
                 attempts++;
                 
-                const template = bestTopic.templates[Math.floor(Math.random() * bestTopic.templates.length)];
-                
-                // Replace placeholders and ensure title is safe and engaging
-                let title = template
-                    .replace(/\[KEYWORD\]/g, keywordToInsert)
+                // Randomly select indices for the three parts
+                const index1 = Math.floor(Math.random() * numTemplates);
+                const index2 = Math.floor(Math.random() * numTemplates);
+                const index3 = Math.floor(Math.random() * numTemplates);
+
+                // Construct the title using the language-specific words
+                // Template structure: [VERB] + [KEYWORD] + [ADJECTIVE] + [PHRASE]
+                let title = `${langData.verbs[index1]} ${keywordToInsert} ${langData.adjectives[index2]} ${langData.phrases[index3]}`;
+
+                // Clean up and format
+                title = title
                     .replace(/\s+/g, ' ') // Clean up extra spaces
                     .trim();
-
-                // Inject specific topic emoji
-                const emojiToPrepend = bestTopic.emoji.split(' ')[Math.floor(Math.random() * bestTopic.emoji.split(' ').length)];
-                title = `${emojiToPrepend} ${title}`;
                 
                 // Ensure under 50 characters (Snapchat limit is strict)
                 if (title.length > 50) {
@@ -386,7 +431,7 @@
             // 3. Render the Titles
             const titlesDiv = document.getElementById('titles');
             titlesDiv.innerHTML = '';
-            titles.forEach((title, index) => {
+            titles.forEach((title) => {
                 const container = document.createElement('div');
                 container.className = 'title-container';
 

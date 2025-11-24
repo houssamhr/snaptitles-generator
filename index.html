@@ -34,6 +34,14 @@
             display: flex;
             flex-direction: column;
             animation: fadeIn 1s ease-in;
+            /* Added transition for direction property */
+            transition: direction 0.3s;
+        }
+
+        /* Ensure correct alignment for Arabic */
+        body[dir="rtl"] .title-container {
+            border-right: 6px solid var(--snap-black);
+            border-left: none;
         }
 
         @keyframes fadeIn {
@@ -165,29 +173,42 @@
         .title-container {
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Space out title and copy button */
             background-color: var(--card-color);
             padding: 20px;
             margin: 15px 0;
             border-radius: 12px;
             box-shadow: 0 6px 20px var(--shadow-dark);
             border-left: 6px solid var(--snap-black);
-            animation: slideIn 0.6s ease-out;
             transition: all 0.3s ease;
             font-size: 1.1em;
             font-weight: 600;
             border-top: 2px solid var(--snap-yellow);
         }
+        .title-text {
+            /* This span will take up the remaining space */
+            flex-grow: 1; 
+            /* Ensure text aligns correctly inside the container */
+            text-align: inherit; 
+        }
         .copy-btn {
-            background: none;
-            border: none;
-            color: var(--snap-black);
-            font-size: 1.3em;
-            cursor: pointer;
-            margin-left: 15px;
-            transition: all 0.3s ease;
+            /* Reset button styles */
+            display: block;
+            width: auto;
             padding: 5px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--snap-black);
+            border: none;
             border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: none; /* remove box shadow for small button */
             background-color: var(--snap-yellow);
+            margin: 0; /* Remove default button margins */
+            /* Add margin to separate from the text */
+            margin-inline-start: 15px; 
+            flex-shrink: 0;
         }
         .copy-btn:hover {
             transform: scale(1.1);
@@ -260,7 +281,6 @@
             ar: {
                 pageTitle: "مولد عناوين بالذكاء الاصطناعي", mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️", description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!", placeholder: "مثال: خدع سحرية، نصائح طبخ", button: "إنشاء العناوين", reset: "إعادة تعيين", alert: "يرجى إدخال موضوع!", copied: "تم النسخ!",
                 topics: {
-                    // These templates are grammatically correct Arabic sentences, avoiding word mixing.
                     "COOK": { emoji: "🍳🤤", templates: ["🤯 أسرار [KEYWORD] التي تحتاجها الآن!", "وصفات [KEYWORD] سهلة جننت الإنترنت! 💯", "السر [KEYWORD] الذي غير حياتي! 🤫", "توقف عن أخطاء [KEYWORD] هذه! 🙅‍♀️"] },
                     "FITNESS": { emoji: "💪🔥", templates: ["تمرينة [KEYWORD] 5 دقائق لحرق الدهون 🔥", "السر [KEYWORD] للحصول على عضلات بطن خرافية! 🏆", "هكذا يتمرن محترفو [KEYWORD] الآن! ⚡️", "نتائج [KEYWORD] فورية؟ شاهد الصدمة! 🤯"] },
                     "GAMING": { emoji: "🎮🔥", templates: ["هذه استراتيجية [KEYWORD] مكسورة! 🤯", "أجنّ جنون [KEYWORD] لهذا الأسبوع! 😱", "الكشف عن إعدادات [KEYWORD] السرية! 🤫", "10 أشياء لا أحد يخبرك بها عن [KEYWORD] 😲"] },
@@ -338,10 +358,25 @@
         function copyToClipboard(text, buttonElement) {
             navigator.clipboard.writeText(text).then(() => {
                 const langData = translations[currentLang];
+                // Store current innerHTML to restore after the timeout
                 const originalContent = buttonElement.innerHTML;
-                buttonElement.innerHTML = `✅ ${langData.copied}`;
+                buttonElement.innerHTML = `✅`; 
                 setTimeout(() => {
-                    buttonElement.innerHTML = '📋'; // Reset to clipboard icon
+                    buttonElement.innerHTML = originalContent; // Restore original icon
+                }, 1000);
+                
+                // Optional: Provide visual feedback next to the button
+                const tempFeedback = document.createElement('span');
+                tempFeedback.textContent = langData.copied;
+                tempFeedback.style.fontSize = '0.9em';
+                tempFeedback.style.fontWeight = 'bold';
+                tempFeedback.style.marginInlineStart = '10px';
+                
+                const container = buttonElement.closest('.title-container');
+                container.insertBefore(tempFeedback, buttonElement.nextSibling);
+                
+                setTimeout(() => {
+                    tempFeedback.remove();
                 }, 1000);
             });
         }
@@ -368,12 +403,12 @@
             // 1. Identify Best Topic Match (AI-like classification)
             let bestTopic = langTopics.DEFAULT;
             
-            // Use the ENGLISH keys (COOK, GAMING) for classification, but apply the chosen language's template
+            // Use the ENGLISH keys (COOK, GAMING, etc.) for classification, as they are consistent
             const enTopicKeys = Object.keys(translations.en.topics);
             
             for (const key of enTopicKeys) {
                 // Check if the input topic contains any of the English keywords
-                if (topicUpper.includes(key) || topicUpper.includes(translations.en.topics[key].emoji)) {
+                if (topicUpper.includes(key)) {
                     // If a match is found, use the corresponding template set from the current language
                     bestTopic = langTopics[key];
                     break; 
@@ -405,20 +440,16 @@
                 
                 // Ensure correct placement based on language direction
                 if (currentLang === 'ar') {
+                     // For Arabic, emoji typically go at the end of the written phrase
                      title = `${title} ${emojiToPrepend}`;
                 } else {
+                     // For LTR languages, emoji typically go at the start
                      title = `${emojiToPrepend} ${title}`;
                 }
                 
                 // Ensure under 50 characters (Snapchat limit is strict)
                 if (title.length > 50) {
-                    // Truncate based on language direction
-                    if (currentLang === 'ar') {
-                         title = title.substring(0, 47) + '...';
-                    } else {
-                         title = title.substring(0, 47) + '...';
-                    }
-                   
+                    title = title.substring(0, 47) + '...';
                 }
 
                 if (!titlesSet.has(title)) {
@@ -433,7 +464,9 @@
             titles.forEach((title) => {
                 const container = document.createElement('div');
                 container.className = 'title-container';
-
+                // Set the text alignment for the container based on direction
+                container.style.textAlign = currentLang === 'ar' ? 'right' : 'left';
+                
                 const textSpan = document.createElement('span');
                 textSpan.className = 'title-text';
                 textSpan.textContent = title;
@@ -446,14 +479,10 @@
                 copyBtn.setAttribute('onclick', `copyToClipboard('${cleanTitle}', this)`);
                 copyBtn.setAttribute('aria-label', 'Copy Title');
 
-                // Adjust copy button position for RTL
-                if (currentLang === 'ar') {
-                    container.appendChild(copyBtn);
-                    container.appendChild(textSpan);
-                } else {
-                    container.appendChild(textSpan);
-                    container.appendChild(copyBtn);
-                }
+                // LTR: [TEXT] [BUTTON]
+                // RTL: [BUTTON] [TEXT] (This is handled by CSS direction + justify-content: space-between)
+                container.appendChild(textSpan);
+                container.appendChild(copyBtn);
                 
                 titlesDiv.appendChild(container);
             });

@@ -4,90 +4,492 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">AI Clickbait Title Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Bangers&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; }
-        .title-container { background: #fff; padding: 15px; border-radius: 8px; margin: 10px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        /* CSS Reset and Modern Styling (Simplified for stability) */
+        :root {
+            --snap-yellow: #FFFC00;
+            --snap-black: #1E1E1E;
+            --snap-white: #FFFFFF;
+            --background-color: #F8F9FA;
+            --card-color: var(--snap-white);
+            --text-color: var(--snap-black);
+            --shadow-light: rgba(255, 252, 0, 0.2);
+            --shadow-dark: rgba(0, 0, 0, 0.1);
+            --error-color: #ff0000;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 1s ease-in;
+            transition: direction 0.3s;
+        }
+
+        /* Ensure correct alignment for Arabic */
+        body[dir="rtl"] .title-container {
+            border-right: 6px solid var(--snap-black);
+            border-left: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header and Logo */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-generator {
+            display: block;
+            margin: 0 auto 10px;
+            width: 80px;
+            height: 80px;
+            color: var(--snap-yellow);
+            transition: transform 0.3s;
+        }
+        
+        h1 {
+            font-family: 'Bangers', cursive;
+            color: var(--snap-black);
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 4px 4px 0 var(--snap-yellow), 
+                         -4px -4px 0 rgba(0, 0, 0, 0.1);
+            line-height: 1;
+        }
+        
+        .lang-selector {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 35px;
+            padding: 15px;
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
+
+        /* Form Elements */
+        select, input {
+            font-family: 'Poppins', sans-serif;
+        }
+        select {
+            padding: 12px 18px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 2px solid var(--snap-yellow);
+            background-color: var(--card-color);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        p {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        input {
+            display: block;
+            width: 100%;
+            margin: 20px 0;
+            padding: 18px;
+            font-size: 18px;
+            border: 2px solid var(--snap-yellow);
+            border-radius: 12px;
+            background-color: var(--card-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        input::placeholder {
+            color: #666;
+        }
+        .error {
+            border-color: var(--error-color) !important;
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Buttons */
+        button {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--snap-black);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            box-shadow: 0 6px 0 var(--snap-yellow);
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+        #generateBtn {
+            background-color: var(--snap-yellow);
+        }
+        #generateBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #e6e600;
+        }
+        #generateBtn:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #e6e600;
+        }
+        #resetBtn {
+            background-color: var(--snap-white);
+            box-shadow: 0 6px 0 #ccc;
+            color: var(--snap-black);
+        }
+        #resetBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #aaa;
+        }
+
+        /* Generated Titles */
+        #titles {
+            margin-top: 25px;
+        }
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--card-color);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px var(--shadow-dark);
+            border-left: 6px solid var(--snap-black);
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-top: 2px solid var(--snap-yellow);
+        }
+        .title-text {
+            flex-grow: 1; 
+            text-align: inherit; 
+            margin-inline-end: 10px;
+        }
+        .copy-btn {
+            display: block;
+            width: auto;
+            padding: 5px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--snap-black);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            box-shadow: none;
+            background-color: var(--snap-yellow);
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .copy-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Donate Section Styles */
+        .donate-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            border-top: 1px solid #ddd;
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px var(--shadow-dark);
+        }
     </style>
 </head>
 <body>
-    <h1 id="mainTitle">AI Title Generator ⚡️</h1>
+    <div class="header">
+        <svg class="logo-generator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM9 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm6 0c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm-3 8c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/>
+        </svg>
 
-    <select id="langSelect" onchange="changeLanguage()">
-        <option value="en">English</option>
-        <option value="ar">Arabic</option>
-        <option value="fr">French</option>
-        <option value="es">Spanish</option>
-        <option value="de">German</option>
-        <option value="it">Italian</option>
-    </select>
-
-    <p id="description">Enter your video topic</p>
-    <input id="topicInput" placeholder="Enter topic...">
-    <button onclick="generateTitles()" id="generateBtn">Generate Titles</button>
-
+        <h1 id="mainTitle">AI Title Generator ⚡️</h1>
+    </div>
+    
+    <div class="lang-selector">
+        <label for="langSelect">🌍 Language: </label>
+        <select id="langSelect" onchange="changeLanguage()">
+            <option value="en">🇺🇸 English</option>
+            <option value="ar">🇸🇦 Arabic</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="es">🇪🇸 Spanish</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="it">🇮🇹 Italian</option>
+        </select>
+    </div>
+    
+    <p id="description">Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!</p>
+    <input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks" maxlength="100">
+    <button id="generateBtn">Generate Titles</button>
+    <button id="resetBtn" onclick="resetForm()">Reset</button>
     <div id="titles"></div>
 
-<script>
-// LANGUAGE UI TEXT
-const translations = {
-    en:{pageTitle:"AI Clickbait Title Generator",mainTitle:"AI Title Generator ⚡️",description:"Enter your topic",placeholder:"e.g., Cooking, Magic",button:"Generate Titles",alert:"Enter topic!",copied:"Copied!"},
-    ar:{pageTitle:"مولد العناوين بالذكاء الاصطناعي",mainTitle:"مولد العناوين ⚡️",description:"أدخل موضوع الفيديو",placeholder:"مثال: سحر، طبخ",button:"إنشاء العناوين",alert:"الرجاء إدخال موضوع!",copied:"تم النسخ!"},
-    fr:{pageTitle:"Générateur de Titres IA",mainTitle:"Générateur IA ⚡️",description:"Entrez votre sujet",placeholder:"ex: Cuisine, Magie",button:"Générer",alert:"Veuillez entrer un sujet!",copied:"Copié!"},
-    es:{pageTitle:"Generador de Títulos IA",mainTitle:"Generador IA ⚡️",description:"Ingresa tu tema",placeholder:"ej: Cocina, Magia",button:"Generar",alert:"Ingresa un tema!",copied:"Copiado!"},
-    de:{pageTitle:"Titelgenerator KI",mainTitle:"Titelgenerator ⚡️",description:"Gib dein Thema ein",placeholder:"z.B. Kochen, Magie",button:"Generieren",alert:"Bitte ein Thema eingeben!",copied:"Kopiert!"},
-    it:{pageTitle:"Generatore Titoli IA",mainTitle:"Generatore IA ⚡️",description:"Inserisci argomento",placeholder:"es: Cucina, Magia",button:"Genera",alert:"Inserisci un argomento!",copied:"Copiato!"}
-};
+    <div class="donate-section">
+        <p>Support our project and help us create more tools like this! 🙏</p>
+        
+        <button 
+            type="button" 
+            id="donateBtn"
+            onclick="window.open('https://ko-fi.com/houssamrais', '_blank');"
+        >
+            💰 Donate to Support Development
+        </button>
+    </div>
 
-let currentLang = "en";
+    <script>
+        // Wrap all functionality in a listener to ensure the page is fully loaded
+        document.addEventListener('DOMContentLoaded', (event) => {
+            
+            // --- Multilingual Topic-Based Template Engine ---
+            const translations = {
+                en: {
+                    pageTitle: "AI Clickbait Title Generator", mainTitle: "AI Title Generator ⚡️", description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!", placeholder: "e.g., Magic Tricks, Cooking Hacks", button: "Generate Titles", reset: "Reset", alert: "Please enter a topic!", copied: "Copied!",
+                    topics: {
+                        "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMATE [KEYWORD] HACKS YOU NEED!", "EASY [KEYWORD] RECIPES that broke the Internet! 💯", "The [KEYWORD] Secret that changed my life! 🤫", "STOP making [KEYWORD] mistakes like this! 🙅‍♀️"] },
+                        "FITNESS": { emoji: "💪🔥", templates: ["5-MIN [KEYWORD] That Burn MAX Fat! 🔥", "The [KEYWORD] Secret To INSANE Abs! 🏆", "This is how [KEYWORD] pros train NOW! ⚡️", "INSTANT [KEYWORD] RESULTS?! Shocking! 🤯"] },
+                        "GAMING": { emoji: "🎮🔥", templates: ["This [KEYWORD] STRATEGY is broken! 🤯", "The CRAZIEST [KEYWORD] Moments of the week! 😱", "My SECRET [KEYWORD] settings revealed! 🤫", "10 things NO ONE tells you about [KEYWORD] 😲"] },
+                        "BEAUTY": { emoji: "💄✨", templates: ["[KEYWORD] TRANSFORMATION that blew my mind! 💖", "EASY [KEYWORD] Tricks for Beginners! 💅", "Must-HAVE [KEYWORD] HACKS for perfect skin! 🤩", "The ONLY [KEYWORD] products worth buying! 💸"] },
+                        "DEFAULT": { emoji: "✨🔥", templates: ["🤯 The [KEYWORD] Truth Nobody Tells You! 🤫", "You Won't BELIEVE What Happened Next! 😱", "The Ultimate [KEYWORD] Guide for BEGINNERS! 💯", "This [KEYWORD] CHANGED EVERYTHING! 🚀"] }
+                    }
+                },
+                ar: {
+                    pageTitle: "مولد عناوين بالذكاء الاصطناعي", mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️", description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!", placeholder: "مثال: خدع سحرية، نصائح طبخ", button: "إنشاء العناوين", reset: "إعادة تعيين", alert: "يرجى إدخال موضوع!", copied: "تم النسخ!",
+                    topics: {
+                        "COOK": { emoji: "🍳🤤", templates: ["🤯 أسرار [KEYWORD] التي تحتاجها الآن!", "وصفات [KEYWORD] سهلة جننت الإنترنت! 💯", "السر [KEYWORD] الذي غير حياتي! 🤫", "توقف عن أخطاء [KEYWORD] هذه! 🙅‍♀️"] },
+                        "FITNESS": { emoji: "💪🔥", templates: ["تمرينة [KEYWORD] 5 دقائق لحرق الدهون 🔥", "السر [KEYWORD] للحصول على عضلات بطن خرافية! 🏆", "هكذا يتمرن محترفو [KEYWORD] الآن! ⚡️", "نتائج [KEYWORD] فورية؟ شاهد الصدمة! 🤯"] },
+                        "GAMING": { emoji: "🎮🔥", templates: ["هذه استراتيجية [KEYWORD] مكسورة! 🤯", "أجنّ جنون [KEYWORD] لهذا الأسبوع! 😱", "الكشف عن إعدادات [KEYWORD] السرية! 🤫", "10 أشياء لا أحد يخبرك بها عن [KEYWORD] 😲"] },
+                        "BEAUTY": { emoji: "💄✨", templates: ["تحول [KEYWORD] مذهل فجر عقلي! 💖", "أسهل خدع [KEYWORD] للمبتدئين! 💅", "أفضل حيل [KEYWORD] للحصول على بشرة مثالية! 🤩", "منتجات [KEYWORD] الوحيدة التي تستحق الشراء! 💸"] },
+                        "DEFAULT": { emoji: "✨🔥", templates: ["🤯 الحقيقة التي لا أحد يخبرك بها عن [KEYWORD]! 🤫", "لن تصدق ما حدث بعد ذلك! 😱", "الدليل الشامل لـ [KEYWORD] للمبتدئين! 💯", "هذا الـ [KEYWORD] غيّر كل شيء! 🚀"] }
+                    }
+                },
+                fr: {
+                    pageTitle: "Générateur de Titres IA", mainTitle: "Générateur de Titres IA ⚡️", description: "Entrez votre sujet (ex. : Tours de Magie) pour 4 titres boostés par l'IA !", placeholder: "ex. : Tours de Magie, Astuces Cuisine", button: "Générer les Titres", reset: "Réinitialiser", alert: "Veuillez entrer un sujet !", copied: "Copié !",
+                    topics: {
+                        "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMES ASTUCES [KEYWORD] dont vous avez besoin!", "RECETTES [KEYWORD] FACILES qui ont cassé Internet! 💯", "Le Secret [KEYWORD] qui a changé ma vie! 🤫", "ARRÊTEZ de faire ces erreurs [KEYWORD]! 🙅‍♀️"] },
+                        "FITNESS": { emoji: "💪🔥", templates: ["[KEYWORD] 5 minutes qui brûle un MAX de graisse! 🔥", "Le Secret [KEYWORD] pour des abdos de fou! 🏆", "C'est comme ça que les pros du [KEYWORD] s'entraînent! ⚡️", "RÉSULTATS [KEYWORD] INSTANTANÉS?! Choquant! 🤯"] },
+                        "GAMING": { emoji: "🎮🔥", templates: ["Cette STRATÉGIE [KEYWORD] est cassée! 🤯", "Les Moments [KEYWORD] les PLUS FOUS de la semaine! 😱", "Mes réglages [KEYWORD] SECRETS révélés! 🤫", "10 choses que PERSONNE ne vous dit sur [KEYWORD] 😲"] },
+                        "BEAUTY": { emoji: "💄✨", templates: ["TRANSFORMATION [KEYWORD] qui m'a époustouflé! 💖", "Astuces [KEYWORD] FACILES pour débutants! 💅", "HACKS [KEYWORD] indispensables pour une peau parfaite! 🤩", "Les SEULS produits [KEYWORD] qui valent le coup! 💸"] },
+                        "DEFAULT": { emoji: "✨🔥", templates: ["🤯 La Vérité [KEYWORD] que personne ne vous dit! 🤫", "Vous ne CROIREZ jamais ce qui s'est passé ensuite! 😱", "Le Guide ULTIME de [KEYWORD] pour DÉBUTANTS! 💯", "Ce [KEYWORD] a TOUT changé! 🚀"] }
+                    }
+                },
+                es: {
+                    pageTitle: "Generador de Títulos IA", mainTitle: "Generador de Títulos IA ⚡️", description: "¡Ingresa tu tema para 4 títulos impulsados por IA!", placeholder: "ej. : Trucos de Magia, Consejos de Cocina", button: "Generar Títulos", reset: "Restablecer", alert: "¡Por favor ingresa un tema!", copied: "¡Copiado!",
+                    topics: {
+                        "COOK": { emoji: "🍳🤤", templates: ["🤯 ¡LOS HACKS [KEYWORD] DEFINITIVOS que necesitas!", "¡RECETAS [KEYWORD] FÁCILES que rompieron el Internet! 💯", "¡El Secreto [KEYWORD] que cambió mi vida! 🤫", "¡DEJA de cometer errores [KEYWORD] como este! 🙅‍♀️"] },
+                        "FITNESS": { emoji: "💪🔥", templates: ["[KEYWORD] de 5 MIN que quema la MÁXIMA grasa! 🔥", "¡El Secreto [KEYWORD] para unos abdominales de LOCURA! 🏆", "¡Así es como entrenan los profesionales de [KEYWORD] AHORA! ⚡️", "¿¡RESULTADOS [KEYWORD] INSTANTÁNEOS?! ¡Increíble! 🤯"] },
+                        "GAMING": { emoji: "🎮🔥", templates: ["¡Esta ESTRATEGIA [KEYWORD] está rota! 🤯", "¡Los Momentos [KEYWORD] MÁS LOCOS de la semana! 😱", "¡Mis ajustes SECRETOS de [KEYWORD] revelados! 🤫", "10 cosas que NADIE te dice sobre [KEYWORD] 😲"] },
+                        "BEAUTY": { emoji: "💄✨", templates: ["¡TRANSFORMACIÓN [KEYWORD] que me voló la cabeza! 💖", "¡Trucos [KEYWORD] FÁCILES para principiantes! 💅", "¡HACKS [KEYWORD] imprescindibles para una piel perfecta! 🤩", "¡Los ÚNICOS productos [KEYWORD] que valen la pena! 💸"] },
+                        "DEFAULT": { emoji: "✨🔥", templates: ["🤯 La Verdad [KEYWORD] que nadie te dice! 🤫", "¡No vas a CREER lo que pasó después! 😱", "La Guía [KEYWORD] definitiva para PRINCIPIANTES! 💯", "¡Este [KEYWORD] CAMBIÓ TODO! 🚀"] }
+                    }
+                },
+                de: {
+                    pageTitle: "KI-Titel-Generator", mainTitle: "KI-Titel-Generator ⚡️", description: "Gib dein Thema ein (z.B. Kochtipps) für 4 KI-gestützte Titel!", placeholder: "z.B. Zaubertricks, Kochtipps", button: "Titel Generieren", reset: "Zurücksetzen", alert: "Bitte gib ein Thema ein!", copied: "Kopiert!",
+                    topics: {
+                        "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMATIVE [KEYWORD] HACKS, die du brauchst!", "EINFACHE [KEYWORD] REZEPTE, die das Internet gesprengt haben! 💯", "Das [KEYWORD] Geheimnis, das mein Leben verändert hat! 🤫", "HÖRE auf, DIESE [KEYWORD] Fehler zu machen! 🙅‍♀️"] },
+                        "FITNESS": { emoji: "💪🔥", templates: ["5-MIN [KEYWORD], der MAXIMAL Fett verbrennt! 🔥", "Das [KEYWORD] Geheimnis für EINEN IRREN Sixpack! 🏆", "So trainieren [KEYWORD] Pros JETZT! ⚡️", "SOFORTIGE [KEYWORD] ERGEBNISSE?! Schockierend! 🤯"] },
+                        "GAMING": { emoji: "🎮🔥", templates": ["Diese [KEYWORD] STRATEGIE ist broken! 🤯", "Die VERRÜCKTESTEN [KEYWORD] Momente der Woche! 😱", "Meine GEHEIMEN [KEYWORD] Einstellungen enthüllt! 🤫", "10 Dinge, die dir NIEMAND über [KEYWORD] sagt! 😲"] },
+                        "BEAUTY": { emoji: "💄✨", templates": ["[KEYWORD] TRANSFORMATION, die mich umgehauen hat! 💖", "EINFACHE [KEYWORD] Tricks für Anfänger! 💅", "Must-HAVE [KEYWORD] HACKS für perfekte Haut! 🤩", "Die EINZIGEN [KEYWORD] Produkte, die es wert sind! 💸"] },
+                        "DEFAULT": { emoji: "✨🔥", templates": ["🤯 Die [KEYWORD] Wahrheit, die dir niemand erzählt! 🤫", "Du wirst NICHT glauben, was als Nächstes passiert ist! 😱", "Der ULTIMATIVE [KEYWORD] Guide für ANFÄNGER! 💯", "Dieser [KEYWORD] hat ALLES verändert! 🚀"] }
+                    }
+                },
+                it: {
+                    pageTitle: "Generatore di Titoli IA", mainTitle: "Generatore di Titoli IA ⚡️", description: "Inserisci il tuo argomento per 4 titoli basati sull'IA!", placeholder: "es. Trucchi Magici, Consigli Cucina", button: "Genera Titoli", reset: "Ripristina", alert: "Per favore inserisci un argomento!", copied: "Copiato!",
+                    topics: {
+                        "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMI HACKS [KEYWORD] di cui hai bisogno!", "RICETTE [KEYWORD] FACILI che hanno rotto Internet! 💯", "Il Segreto [KEYWORD] che mi ha cambiato la vita! 🤫", "SMETTI di fare questi errori [KEYWORD]! 🙅‍♀️"] },
+                        "FITNESS": { emoji: "💪🔥", templates": ["[KEYWORD] da 5 MIN che bruciano il grasso MAX! 🔥", "Il Segreto [KEYWORD] per addominali PAZZESCHI! 🏆", "Ecco come si allenano i professionisti del [KEYWORD] ORA! ⚡️", "RISULTATI [KEYWORD] ISTANTANEI?! Scioccante! 🤯"] },
+                        "GAMING": { emoji: "🎮🔥", templates": ["Questa STRATEGIA [KEYWORD] è rotta! 🤯", "I Momenti [KEYWORD] PIÙ PAZZI della settimana! 😱", "Le mie impostazioni [KEYWORD] SEGRETE rivelate! 🤫", "10 cose che NESSUNO ti dice su [KEYWORD] 😲"] },
+                        "BEAUTY": { emoji: "💄✨", templates": ["TRASFORMAZIONE [KEYWORD] che mi ha sbalordito! 💖", "Trucchi [KEYWORD] FACILI per principianti! 💅", "HACKS [KEYWORD] essenziali per una pelle perfetta! 🤩", "Gli UNICI prodotti [KEYWORD] che vale la pena comprare! 💸"] },
+                        "DEFAULT": { emoji: "✨🔥", templates": ["🤯 La Verità [KEYWORD] che nessuno ti dice! 🤫", "Non crederai mai a cosa è successo dopo! 😱", "La Guida ULTIMA a [KEYWORD] per PRINCIPIANTI! 💯", "Questo [KEYWORD] ha CAMBIATO TUTTO! 🚀"] }
+                    }
+                }
+            };
 
-// TEMPLATES PER LANGUAGE
-const templates = {
-    en:["🔥 The Secret of [KEYWORD] They Don’t Want You To Know!","😱 This [KEYWORD] Trick Changed EVERYTHING!","🚀 Top [KEYWORD] Hacks Going Viral Right Now!","🤯 You Won’t Believe This [KEYWORD] Tip!"],
-    ar:["🔥 سر [KEYWORD] الذي لا يخبرك به أحد!","😱 خدعة [KEYWORD] التي ستغير كل شيء!","🚀 أفضل حيل [KEYWORD] المنتشرة الآن!","🤯 لن تصدق نصيحة [KEYWORD] هذه!"],
-    fr:["🔥 Le secret de [KEYWORD] que personne ne te dit !","😱 Cette astuce [KEYWORD] va tout changer !","🚀 Les meilleurs hacks [KEYWORD] du moment !","🤯 Tu ne vas pas croire cette astuce [KEYWORD] !"],
-    es:["🔥 El secreto de [KEYWORD] que nadie te dice!","😱 Este truco de [KEYWORD] lo cambia TODO!","🚀 Los mejores hacks de [KEYWORD] del momento!","🤯 No creerás este truco de [KEYWORD]!"],
-    de:["🔥 Das geheime [KEYWORD], das dir niemand sagt!","😱 Dieser [KEYWORD]-Trick verändert ALLES!","🚀 Die besten [KEYWORD]-Hacks gerade viral!","🤯 Du wirst diesen [KEYWORD]-Trick nicht glauben!"],
-    it:["🔥 Il segreto di [KEYWORD] che nessuno ti dice!","😱 Questo trucco [KEYWORD] cambia tutto!","🚀 I migliori hack [KEYWORD] del momento!","🤯 Non crederai a questo trucco [KEYWORD]!"]
-};
+            let currentLang = 'en';
 
-function changeLanguage(){
-    currentLang = document.getElementById("langSelect").value;
-    const t = translations[currentLang];
-    document.getElementById("pageTitle").innerText = t.pageTitle;
-    document.getElementById("mainTitle").innerText = t.mainTitle;
-    document.getElementById("description").innerText = t.description;
-    document.getElementById("topicInput").placeholder = t.placeholder;
-    document.getElementById("generateBtn").innerText = t.button;
-    document.body.dir = currentLang === "ar" ? "rtl" : "ltr";
-}
+            window.changeLanguage = function() {
+                currentLang = document.getElementById('langSelect').value;
+                const langData = translations[currentLang];
 
-function generateTitles(){
-    const topic = document.getElementById("topicInput").value.trim();
-    if(!topic){ alert(translations[currentLang].alert); return; }
+                // Update UI text
+                document.getElementById('pageTitle').textContent = langData.pageTitle;
+                document.getElementById('mainTitle').textContent = langData.mainTitle;
+                document.getElementById('description').textContent = langData.description;
+                document.getElementById('topicInput').placeholder = langData.placeholder;
+                document.getElementById('generateBtn').textContent = langData.button;
+                document.getElementById('resetBtn').textContent = langData.reset;
+                
+                // Handle RTL (Arabic)
+                document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+                document.body.style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+            }
 
-    const titleSet = new Set();
-    const out = [];
+            window.resetForm = function() {
+                document.getElementById('topicInput').value = '';
+                document.getElementById('titles').innerHTML = '';
+                document.getElementById('topicInput').classList.remove('error');
+            }
 
-    while(out.length < 4){
-        const temp = templates[currentLang][Math.floor(Math.random()*templates[currentLang].length)];
-        let t = temp.replace(/\[KEYWORD\]/g, topic);
-        if(!titleSet.has(t)){
-            titleSet.add(t);
-            out.push(t);
-        }
-    }
+            window.copyToClipboard = function(text, buttonElement) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalContent = buttonElement.innerHTML;
+                    const originalColor = buttonElement.style.backgroundColor;
+                    
+                    // Temporary change to indicate success
+                    buttonElement.innerHTML = `✅`; 
+                    buttonElement.style.backgroundColor = '#4CAF50'; // Green feedback
+                    
+                    setTimeout(() => {
+                        // Restore original icon and color
+                        buttonElement.innerHTML = originalContent; 
+                        buttonElement.style.backgroundColor = originalColor; // Restores to var(--snap-yellow)
+                    }, 1000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy title. Please try manually.');
+                });
+            }
+            
+            // --- CORE GENERATION LOGIC (FIXED and Error-Proof) ---
+            window.generateTitles = function() {
+                try {
+                    const inputElement = document.getElementById('topicInput');
+                    const topic = inputElement.value.trim();
+                    const langData = translations[currentLang]; 
 
-    const box = document.getElementById("titles");
-    box.innerHTML = '';
-    out.forEach(t =>{
-        const div = document.createElement("div");
-        div.className = "title-container";
-        div.innerText = t;
-        box.appendChild(div);
-    });
-}
+                    if (!topic) {
+                        inputElement.classList.add('error');
+                        setTimeout(() => inputElement.classList.remove('error'), 500);
+                        alert(langData.alert);
+                        return;
+                    }
+                    inputElement.classList.remove('error');
 
-window.onload = function(){ changeLanguage(); };
-</script>
+                    const titles = [];
+                    const titlesSet = new Set();
+                    const langTopics = langData.topics; 
+                    const topicUpper = topic.toUpperCase();
+
+                    // 1. Identify Best Topic Match (AI-like classification)
+                    let bestTopic = langTopics.DEFAULT;
+                    
+                    const enTopicKeys = Object.keys(translations.en.topics);
+                    
+                    for (const key of enTopicKeys) {
+                        if (topicUpper.includes(key)) {
+                            bestTopic = langTopics[key];
+                            break; 
+                        }
+                    }
+
+                    const keywordToInsert = topic;
+
+                    const maxAttempts = 20;
+                    let attempts = 0;
+
+                    // 2. Generate 4 unique titles from topic-specific templates
+                    while (titles.length < 4 && attempts < maxAttempts) {
+                        attempts++;
+                        
+                        const templates = bestTopic.templates;
+                        if (!templates || templates.length === 0) break;
+                        
+                        const template = templates[Math.floor(Math.random() * templates.length)];
+                        
+                        let title = template
+                            .replace(/\[KEYWORD\]/g, keywordToInsert)
+                            .replace(/\s+/g, ' ')
+                            .trim();
+
+                        const emojis = bestTopic.emoji ? bestTopic.emoji.split(' ') : [];
+                        if (emojis.length === 0) {
+                            // If no emoji, just use a default placeholder
+                            title = `⚡️ ${title}`;
+                        } else {
+                            const emojiToUse = emojis[Math.floor(Math.random() * emojis.length)];
+                            
+                            // Add emoji based on language direction
+                            if (currentLang === 'ar') {
+                                 title = `${title} ${emojiToUse}`;
+                            } else {
+                                 title = `${emojiToUse} ${title}`;
+                            }
+                        }
+                        
+                        // Truncate if too long (Snapchat limit)
+                        if (title.length > 50) {
+                            title = title.substring(0, 47) + '...';
+                        }
+
+                        if (!titlesSet.has(title)) {
+                            titlesSet.add(title);
+                            titles.push(title);
+                        }
+                    }
+
+                    // 3. Render the Titles
+                    const titlesDiv = document.getElementById('titles');
+                    titlesDiv.innerHTML = '';
+                    titles.forEach((title) => {
+                        const container = document.createElement('div');
+                        container.className = 'title-container';
+                        container.style.textAlign = currentLang === 'ar' ? 'right' : 'left';
+                        
+                        const textSpan = document.createElement('span');
+                        textSpan.className = 'title-text';
+                        textSpan.textContent = title;
+
+                        const copyBtn = document.createElement('button');
+                        copyBtn.className = 'copy-btn';
+                        copyBtn.innerHTML = '📋';
+                        
+                        // CRITICAL FIX: Encode/Decode for maximum safety when passing to onclick
+                        const encodedTitle = encodeURIComponent(title);
+                        copyBtn.setAttribute('onclick', `copyToClipboard(decodeURIComponent('${encodedTitle}'), this)`);
+                        copyBtn.setAttribute('aria-label', 'Copy Title');
+
+                        container.appendChild(textSpan);
+                        container.appendChild(copyBtn);
+                        
+                        titlesDiv.appendChild(container);
+                    });
+
+                } catch (error) {
+                    // Catches any unexpected JS error and alerts the user
+                    console.error("An error occurred during title generation:", error);
+                    alert("A critical error occurred. Please check the Developer Console (F12) for details: " + error.message);
+                }
+            }
+
+            // Bind the generateTitles function to the button after the document is ready
+            document.getElementById('generateBtn').addEventListener('click', generateTitles);
+
+            // Initialize with English
+            changeLanguage();
+        });
+    </script>
 </body>
 </html>

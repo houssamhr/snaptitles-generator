@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Snapchat Clickbait Title Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <title id="pageTitle">AI Clickbait Title Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Reset and Modern Styling */
+        /* CSS Reset and Modern Styling (Simplified for stability) */
         :root {
             --snap-yellow: #FFFC00;
             --snap-black: #1E1E1E;
             --snap-white: #FFFFFF;
-            --background-light: #F8F9FA; /* Light background */
+            --background-color: #F8F9FA;
             --card-color: var(--snap-white);
             --text-color: var(--snap-black);
             --shadow-light: rgba(255, 252, 0, 0.2);
             --shadow-dark: rgba(0, 0, 0, 0.1);
-            --hover-color: #E9ECEF;
             --error-color: #ff0000;
         }
 
@@ -25,47 +24,21 @@
         }
 
         body {
-            font-family: 'Fredoka One', cursive; /* Changed to Fredoka One for a bubbly, creative feel */
+            font-family: 'Poppins', sans-serif;
             max-width: 700px;
             margin: 0 auto;
             padding: 30px;
-            background-color: var(--background-light);
-            background-image: 
-                radial-gradient(circle at 25% 25%, var(--snap-yellow) 2px, transparent 2px),
-                radial-gradient(circle at 75% 75%, var(--snap-black) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: movePattern 20s linear infinite;
+            background-color: var(--background-color);
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             animation: fadeIn 1s ease-in;
-            transition: direction 0.3s;
         }
 
-        @keyframes movePattern {
-            0% { background-position: 0 0; }
-            100% { background-position: 50px 50px; }
-        }
-
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes subtlePulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        @keyframes slideIn {
-            0% { transform: translateX(100%); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
         }
 
         /* Header and Logo */
@@ -75,25 +48,27 @@
         }
         .logo-generator {
             display: block;
-            margin: 0 auto 20px;
+            margin: 0 auto 10px;
             width: 80px;
             height: 80px;
-            fill: var(--snap-yellow);
-            animation: subtlePulse 4s infinite ease-in-out;
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0 4px 8px rgba(255,252,0,0.3));
+            color: var(--snap-yellow);
+            animation: bounce 1.5s ease-out;
+            transition: transform 0.3s;
         }
-        .logo-generator:hover {
-            transform: rotate(-5deg) scale(1.1);
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-15px);}
+            60% {transform: translateY(-7px);}
         }
         
         h1 {
+            font-family: 'Bangers', cursive;
             color: var(--snap-black);
-            font-size: 2.8em;
+            font-size: 3em;
             margin: 0;
-            font-weight: 500; /* Reduced from 700 to 500 for less thickness */
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            letter-spacing: -0.02em;
+            text-shadow: 4px 4px 0 var(--snap-yellow), 
+                         -4px -4px 0 rgba(0, 0, 0, 0.1);
+            line-height: 1;
         }
         
         .lang-selector {
@@ -107,6 +82,9 @@
         }
 
         /* Form Elements */
+        select, input {
+            font-family: 'Poppins', sans-serif;
+        }
         select {
             padding: 12px 18px;
             font-size: 16px;
@@ -116,19 +94,12 @@
             color: var(--text-color);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: inherit;
-        }
-        select:focus {
-            border-color: var(--snap-black);
-            box-shadow: 0 0 12px var(--shadow-light);
-            outline: none;
         }
         p {
             text-align: center;
-            color: var(--text-color);
-            font-weight: 400;
             margin: 15px 0;
             font-size: 1.1em;
+            font-weight: 600;
         }
         input {
             display: block;
@@ -142,19 +113,18 @@
             color: var(--text-color);
             transition: all 0.3s ease;
             box-sizing: border-box;
-            font-family: inherit;
         }
         input::placeholder {
             color: #666;
         }
-        input:focus {
-            border-color: var(--snap-black);
-            box-shadow: 0 0 18px var(--shadow-light);
-            outline: none;
-        }
         .error {
             border-color: var(--error-color) !important;
             animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         /* Buttons */
@@ -163,33 +133,15 @@
             width: 100%;
             padding: 18px;
             font-size: 1.2em;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--snap-black);
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
             box-shadow: 0 6px 0 var(--snap-yellow);
             margin-bottom: 15px;
             font-family: inherit;
-            position: relative;
-            overflow: hidden;
-        }
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        button:hover::before {
-            width: 300px;
-            height: 300px;
         }
         #generateBtn {
             background-color: var(--snap-yellow);
@@ -211,10 +163,6 @@
             transform: translateY(-3px);
             box-shadow: 0 9px 0 #aaa;
         }
-        #resetBtn:active {
-            transform: translateY(3px);
-            box-shadow: 0 3px 0 #aaa;
-        }
 
         /* Generated Titles */
         #titles {
@@ -228,35 +176,26 @@
             margin: 15px 0;
             border-radius: 12px;
             box-shadow: 0 6px 20px var(--shadow-dark);
-            border-left: 6px solid var(--snap-yellow);
+            border-left: 6px solid var(--snap-black);
             animation: slideIn 0.6s ease-out;
             transition: all 0.3s ease;
             font-size: 1.1em;
-            color: var(--text-color);
-        }
-        .title-container:hover {
-            transform: translateY(-5px);
-            background-color: var(--hover-color);
-            box-shadow: 0 10px 30px var(--shadow-dark);
-        }
-        .title-text {
-            flex-grow: 1;
-            font-weight: 500;
+            font-weight: 600;
+            border-top: 2px solid var(--snap-yellow);
         }
         .copy-btn {
             background: none;
             border: none;
-            color: var(--snap-yellow);
+            color: var(--snap-black);
             font-size: 1.3em;
             cursor: pointer;
             margin-left: 15px;
             transition: all 0.3s ease;
             padding: 5px;
             border-radius: 50%;
+            background-color: var(--snap-yellow);
         }
         .copy-btn:hover {
-            color: var(--snap-black);
-            background-color: rgba(255,252,0,0.1);
             transform: scale(1.1);
         }
 
@@ -270,79 +209,15 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px var(--shadow-dark);
         }
-        .donate-section p {
-            font-size: 1.1em;
-            margin-bottom: 20px;
-            color: var(--text-color);
-        }
-        .donate-button-link {
-            text-decoration: none;
-            display: block;
-            width: 80%;
-            margin: 0 auto;
-        }
-        #donateBtn {
-            background-color: var(--snap-yellow);
-            box-shadow: 0 6px 0 #e6e600;
-            color: var(--snap-black);
-        }
-        #donateBtn:hover {
-            background-color: #e6e600;
-            transform: translateY(-3px);
-            box-shadow: 0 9px 0 #ccc;
-        }
-        #donateBtn:active {
-            transform: translateY(3px);
-            box-shadow: 0 3px 0 #ccc;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 20px;
-                max-width: 100%;
-            }
-            h1 {
-                font-size: 2.2em;
-            }
-            .logo-generator {
-                width: 70px;
-                height: 70px;
-            }
-            .title-container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .copy-btn {
-                margin-left: 0;
-                margin-top: 15px;
-                align-self: flex-end;
-            }
-        }
-
-        /* Accessibility */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
     </style>
 </head>
 <body>
     <div class="header">
-        <svg class="logo-generator" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
-            <line x1="7" y1="7" x2="17" y2="7" stroke="currentColor" stroke-width="2"/>
-            <line x1="7" y1="11" x2="17" y2="11" stroke="currentColor" stroke-width="2"/>
-            <line x1="7" y1="15" x2="13" y2="15" stroke="currentColor" stroke-width="2"/>
+        <svg class="logo-generator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM9 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm6 0c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm-3 8c-2.76 0-5-2.24-5-5h2c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 2.76-2.24 5-5 5z"/>
         </svg>
-        <h1 id="mainTitle">Snapchat Clickbait Title Generator</h1>
+
+        <h1 id="mainTitle">AI Title Generator ⚡️</h1>
     </div>
     
     <div class="lang-selector">
@@ -357,8 +232,8 @@
         </select>
     </div>
     
-    <p id="description">Enter a video title or topic, and get four engaging clickbait titles under 50 characters each!</p>
-    <input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks" maxlength="100" aria-describedby="description">
+    <p id="description">Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!</p>
+    <input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks" maxlength="100">
     <button id="generateBtn" onclick="generateTitles()">Generate Titles</button>
     <button id="resetBtn" onclick="resetForm()">Reset</button>
     <div id="titles"></div>
@@ -373,85 +248,38 @@
     </div>
 
     <script>
-        // Translations and word pools (FIXED: Completed truncated data and added missing keys)
+        // --- AI (Topic Mapping) Engine ---
+        // This object maps common video topics to their specific, safe emojis and title templates.
+        const topicMap = {
+            "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMATE [KEYWORD] HACKS YOU NEED!", "EASY [KEYWORD] RECIPES that broke the Internet! 💯", "The [KEYWORD] Secret that changed my life! 🤫", "STOP making [KEYWORD] mistakes like this! 🙅‍♀️"] },
+            "FITNESS": { emoji: "💪🔥", templates: ["5-MIN [KEYWORD] That Burn MAX Fat! 🔥", "The [KEYWORD] Secret To INSANE Abs! 🏆", "This is how [KEYWORD] pros train NOW! ⚡️", "INSTANT [KEYWORD] RESULTS?! Shocking! 🤯"] },
+            "GAMING": { emoji: "🎮🔥", templates: ["This [KEYWORD] STRATEGY is broken! 🤯", "The CRAZIEST [KEYWORD] Moments of the week! 😱", "My SECRET [KEYWORD] settings revealed! 🤫", "10 things NO ONE tells you about [KEYWORD] 😲"] },
+            "BEAUTY": { emoji: "💄✨", templates: ["[KEYWORD] TRANSFORMATION that blew my mind! 💖", "EASY [KEYWORD] Tricks for Beginners! 💅", "Must-HAVE [KEYWORD] HACKS for perfect skin! 🤩", "The ONLY [KEYWORD] products worth buying! 💸"] },
+            "MAGIC": { emoji: "🪄🔮", templates: ["SECRET [KEYWORD] REVEALED! You won't believe it! 🤫", "I Can't Believe This [KEYWORD] Trick Works! 🤯", "The Easiest [KEYWORD] Illusion Ever! 🤩", "Crazy [KEYWORD] That Will SHOCK You! 😱"] },
+            "PETS": { emoji: "🐶🐱", templates: ["CRAZY [KEYWORD] Fails That Went Viral! 🤣", "10 WAYS to make your [KEYWORD] love you more! ❤️", "The FUNNIEST [KEYWORD] videos on the internet! 😂", "This [KEYWORD] is smarter than you think! 🧐"] },
+            "TRAVEL": { emoji: "✈️🏝️", templates: ["MUST-SEE [KEYWORD] Destinations for 2024! 🌎", "My [KEYWORD] BUDGET HACKS nobody uses! 💰", "You NEED to go to this [KEYWORD] spot! 📍", "DON'T travel to [KEYWORD] before watching this! 🛑"] },
+            "DEFAULT": { emoji: "✨🔥", templates: ["🤯 The [KEYWORD] Truth Nobody Tells You! 🤫", "You Won't BELIEVE What Happened Next! 😱", "The Ultimate [KEYWORD] Guide for BEGINNERS! 💯", "This [KEYWORD] CHANGED EVERYTHING! 🚀"] }
+        };
+
+        // --- Standard Translations & Functions ---
         const translations = {
             en: {
-                pageTitle: "Snapchat Clickbait Title Generator",
-                mainTitle: "Snapchat Clickbait Title Generator",
-                description: "Enter a video title or topic, and get four engaging clickbait titles under 50 characters each!",
-                placeholder: "e.g., Magic Tricks, Cooking Hacks",
-                button: "Generate Titles",
-                reset: "Reset",
-                alert: "Please enter a topic!",
-                copied: "Copied to clipboard!",
-                verbs: ["Unleash", "Discover", "Master", "Reveal", "Unlock", "Explore", "Ignite", "Transform"],
-                adjectives: ["Epic", "Secret", "Insane", "Hidden", "Ultimate", "Crazy", "Mind-Blowing", "Shocking"],
-                phrases: ["Secrets Now!", "Hacks Revealed!", "Magic Unfold!", "Tips Today!", "Tricks Exposed!", "Power Unleashed!", "Revealed!", "Uncovered!"]
+                pageTitle: "AI Clickbait Title Generator", mainTitle: "AI Title Generator ⚡️", description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!", placeholder: "e.g., Magic Tricks, Cooking Hacks", button: "Generate Titles", reset: "Reset", alert: "Please enter a topic!", copied: "Copied!"
             },
             ar: {
-                pageTitle: "مولد عناوين جذابة لسناب شات",
-                mainTitle: "مولد عناوين جذابة لسناب شات",
-                description: "أدخل عنوان فيديو أو موضوعًا، واحصل على أربعة عناوين جذابة تحت 50 حرفًا!",
-                placeholder: "مثال: خدع سحرية، نصائح طبخ",
-                button: "إنشاء العناوين",
-                reset: "إعادة تعيين",
-                alert: "يرجى إدخال موضوع!",
-                copied: "تم النسخ إلى الحافظة!",
-                verbs: ["اكشف", "اكتشف", "سيطر", "كشف", "فتح", "استكشف", "أشعل", "حول"],
-                adjectives: ["رائع", "سري", "مجنون", "مخفي", "نهائي", "غريب", "مذهل", "صادم"],
-                phrases: ["الأسرار الآن!", "الخدع مكشوفة!", "السحر يتكشف!", "النصائح اليوم!", "الحيل مكشوفة!", "القوة محررة!", "مكشوف!", "مكتشف!"]
+                pageTitle: "مولد عناوين بالذكاء الاصطناعي", mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️", description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!", placeholder: "مثال: خدع سحرية، نصائح طبخ", button: "إنشاء العناوين", reset: "إعادة تعيين", alert: "يرجى إدخال موضوع!", copied: "تم النسخ!"
             },
             fr: {
-                pageTitle: "Générateur de Titres Clickbait Snapchat",
-                mainTitle: "Générateur de Titres Clickbait Snapchat",
-                description: "Entrez un titre de vidéo ou un sujet, et obtenez quatre titres accrocheurs en moins de 50 caractères !",
-                placeholder: "ex. : Tours de Magie, Astuces Cuisine",
-                button: "Générer les Titres",
-                reset: "Réinitialiser",
-                alert: "Veuillez entrer un sujet !",
-                copied: "Copié dans le presse-papiers !",
-                verbs: ["Dévoile", "Découvre", "Maîtrise", "Révéle", "Débloque", "Explore", "Enflamme", "Transforme"],
-                adjectives: ["Épique", "Secret", "Fou", "Caché", "Ultime", "Dingue", "Époustouflant", "Choquant"],
-                phrases: ["Secrets Maintenant !", "Astuces Révélées !", "Magie se Déroule !", "Conseils Aujourd'hui !", "Trucs Exposés !", "Pouvoir Débloqué !", "Révéler !", "Découvert !"]
+                pageTitle: "Générateur de Titres IA", mainTitle: "Générateur de Titres IA ⚡️", description: "Entrez votre sujet (ex. : Tours de Magie) pour 4 titres boostés par l'IA !", placeholder: "ex. : Tours de Magie, Astuces Cuisine", button: "Générer les Titres", reset: "Réinitialiser", alert: "Veuillez entrer un sujet !", copied: "Copié !"
             },
-            es: { // FIXED: Was truncated here
-                pageTitle: "Generador de Títulos Clickbait de Snapchat",
-                mainTitle: "Generador de Títulos Clickbait de Snapchat",
-                description: "Ingresa un título de video o tema, y obtén cuatro títulos atractivos en menos de 50 caracteres!",
-                placeholder: "ej. : Trucos de Magia, Consejos de Cocina",
-                button: "Generar Títulos",
-                reset: "Restablecer",
-                alert: "¡Por favor ingresa un tema!",
-                copied: "¡Copiado al portapapeles!",
-                verbs: ["Desvela", "Descubre", "Domina", "Revela", "Desbloquea", "Explora", "Enciende", "Transforma"],
-                adjectives: ["Épico", "Secreto", "Loco", "Oculto", "Definitivo", "Chiflado", "Alucinante", "Impactante"],
-                phrases: ["¡Secretos Ahora!", "¡Trucos Revelados!", "¡Magia se Despliega!", "¡Consejos Hoy!", "¡Trucos Expuestos!", "¡Poder Desbloqueado!", "Revelado!", "Descubierto!"]
+            es: {
+                pageTitle: "Generador de Títulos IA", mainTitle: "Generador de Títulos IA ⚡️", description: "¡Ingresa tu tema para 4 títulos impulsados por IA!", placeholder: "ej. : Trucos de Magia, Consejos de Cocina", button: "Generar Títulos", reset: "Restablecer", alert: "¡Por favor ingresa un tema!", copied: "¡Copiado!"
             },
             de: {
-                pageTitle: "Snapchat Clickbait-Titel-Generator",
-                mainTitle: "Snapchat Clickbait-Titel-Generator",
-                description: "Gib einen Videotitel oder ein Thema ein und erhalte vier ansprechende Clickbait-Titel unter 50 Zeichen!",
-                placeholder: "z.B. Zaubertricks, Kochtipps",
-                button: "Titel Generieren",
-                reset: "Zurücksetzen",
-                alert: "Bitte gib ein Thema ein!",
-                copied: "In die Zwischenablage kopiert!",
-                verbs: ["Enthülle", "Entdecke", "Beherrsche", "Offenbare", "Entsperre", "Erkunde", "Entzünde", "Verwandle"],
-                adjectives: ["Episch", "Geheim", "Verrückt", "Versteckt", "Ultimativ", "Wahnsinnig", "Umwerfend", "Schockierend"],
-                phrases: ["Geheimnisse Jetzt!", "Hacks Aufgedeckt!", "Magie Entfaltet!", "Tipps Heute!", "Tricks Enthüllt!", "Kraft Freigesetzt!", "Enthüllt!", "Aufgedeckt!"]
+                pageTitle: "KI-Titel-Generator", mainTitle: "KI-Titel-Generator ⚡️", description: "Gib dein Thema ein (z.B. Kochtipps) für 4 KI-gestützte Titel!", placeholder: "z.B. Zaubertricks, Kochtipps", button: "Titel Generieren", reset: "Zurücksetzen", alert: "Bitte gib ein Thema ein!", copied: "Kopiert!"
             },
             it: {
-                pageTitle: "Generatore di Titoli Clickbait Snapchat",
-                mainTitle: "Generatore di Titoli Clickbait Snapchat",
-                description: "Inserisci un titolo video o un argomento e ottieni quattro titoli accattivanti sotto 50 caratteri!",
-                placeholder: "es. Trucchi Magici, Consigli Cucina",
-                button: "Genera Titoli",
-                reset: "Ripristina",
-                alert: "Per favore inserisci un argomento!",
-                copied: "Copiato negli appunti!",
-                verbs: ["Svela", "Scopri", "Padroneggia", "Rivela", "Sblocca", "Esplora", "Accendi", "Trasforma"],
-                adjectives: ["Epico", "Segreto", "Pazzo", "Nascosto", "Definitivo", "Folle", "Sbalorditivo", "Scioccante"],
-                phrases: ["Segreti Ora!", "Trucchi Rivelati!", "Magia si Svolge!", "Consigli Oggi!", "Trucchi Esposti!", "Potere Sbloccato!", "Rivelato!", "Scoperto!"]
+                pageTitle: "Generatore di Titoli IA", mainTitle: "Generatore di Titoli IA ⚡️", description: "Inserisci il tuo argomento per 4 titoli basati sull'IA!", placeholder: "es. Trucchi Magici, Consigli Cucina", button: "Genera Titoli", reset: "Ripristina", alert: "Per favore inserisci un argomento!", copied: "Copiato!"
             }
         };
 
@@ -461,41 +289,35 @@
             currentLang = document.getElementById('langSelect').value;
             const langData = translations[currentLang];
 
-            // Update page elements
             document.getElementById('pageTitle').textContent = langData.pageTitle;
             document.getElementById('mainTitle').textContent = langData.mainTitle;
             document.getElementById('description').textContent = langData.description;
             document.getElementById('topicInput').placeholder = langData.placeholder;
             document.getElementById('generateBtn').textContent = langData.button;
-            document.getElementById('resetBtn').textContent = langData.reset; // Updated reset button
+            document.getElementById('resetBtn').textContent = langData.reset;
 
-            // Switch to RTL for Arabic
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.body.style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
         }
 
-        // FIX: Added missing function to reset the form
         function resetForm() {
             document.getElementById('topicInput').value = '';
             document.getElementById('titles').innerHTML = '';
             document.getElementById('topicInput').classList.remove('error');
         }
 
-        // FIX: Added function to handle copying to clipboard with visual feedback
         function copyToClipboard(text, buttonElement) {
             navigator.clipboard.writeText(text).then(() => {
+                const langData = translations[currentLang];
                 const originalContent = buttonElement.innerHTML;
-                buttonElement.innerHTML = '✅'; // Success Feedback
+                buttonElement.innerHTML = `✅ ${langData.copied}`;
                 setTimeout(() => {
                     buttonElement.innerHTML = originalContent;
                 }, 1000);
-            }).catch(err => {
-                console.error('Could not copy text: ', err);
-                alert('Error copying text. Check console.');
             });
         }
         
-        // FIX: Reworked logic to match the new CSS structure (.title-container)
+        // --- NEW CORE GENERATION LOGIC ---
         function generateTitles() {
             const inputElement = document.getElementById('topicInput');
             const topic = inputElement.value.trim();
@@ -507,23 +329,48 @@
                 alert(langData.alert);
                 return;
             }
-            inputElement.classList.remove('error'); // Clear error on successful input
+            inputElement.classList.remove('error');
 
             const titles = [];
             const titlesSet = new Set();
+            const topicUpper = topic.toUpperCase();
             const keyWords = topic.split(' ');
-            const keyWord = keyWords.length > 1 ? keyWords.slice(0, 2).join(' ') : keyWords[0];
+
+            // 1. Identify Best Topic Match (AI-like classification)
+            let bestTopic = topicMap.DEFAULT;
+            let topicName = "Topic";
+            
+            for (const key in topicMap) {
+                if (topicUpper.includes(key)) {
+                    bestTopic = topicMap[key];
+                    topicName = key;
+                    break; 
+                }
+            }
+
+            // Fallback for keyWord extraction (use first two words of input)
+            const keywordToInsert = keyWords.slice(0, 2).join(' ');
+
             const maxAttempts = 20;
             let attempts = 0;
 
+            // 2. Generate 4 unique titles from topic-specific templates
             while (titles.length < 4 && attempts < maxAttempts) {
                 attempts++;
-                const verb = langData.verbs[Math.floor(Math.random() * langData.verbs.length)];
-                const adjective = langData.adjectives[Math.floor(Math.random() * langData.adjectives.length)];
-                const phrase = langData.phrases[Math.floor(Math.random() * langData.phrases.length)];
+                
+                const template = bestTopic.templates[Math.floor(Math.random() * bestTopic.templates.length)];
+                
+                // Replace placeholders and ensure title is safe and engaging
+                let title = template
+                    .replace(/\[KEYWORD\]/g, keywordToInsert)
+                    .replace(/\s+/g, ' ') // Clean up extra spaces
+                    .trim();
 
-                let title = `${verb} ${adjective} ${keyWord} ${phrase}`;
-
+                // Inject specific topic emoji
+                const emojiToPrepend = bestTopic.emoji.split(' ')[Math.floor(Math.random() * bestTopic.emoji.split(' ').length)];
+                title = `${emojiToPrepend} ${title}`;
+                
+                // Ensure under 50 characters (Snapchat limit is strict)
                 if (title.length > 50) {
                     title = title.substring(0, 47) + '...';
                 }
@@ -534,6 +381,7 @@
                 }
             }
 
+            // 3. Render the Titles
             const titlesDiv = document.getElementById('titles');
             titlesDiv.innerHTML = '';
             titles.forEach((title, index) => {
@@ -542,14 +390,13 @@
 
                 const textSpan = document.createElement('span');
                 textSpan.className = 'title-text';
-                textSpan.textContent = `${index + 1}. ${title}`;
+                textSpan.textContent = title;
 
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'copy-btn';
-                copyBtn.innerHTML = '📋'; // Clipboard icon
+                copyBtn.innerHTML = '📋';
                 
-                // Pass the clean title text and the button element itself for visual feedback
-                const cleanTitle = title.replace(/"/g, '\\"');
+                const cleanTitle = title.replace(/'/g, "\\'").replace(/"/g, '\\"');
                 copyBtn.setAttribute('onclick', `copyToClipboard('${cleanTitle}', this)`);
                 copyBtn.setAttribute('aria-label', 'Copy Title');
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">AI Clickbait Title Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Bangers&display=swap" rel="stylesheet">
     <style>
         /* CSS Reset and Modern Styling (Simplified for stability) */
         :root {
@@ -52,13 +52,7 @@
             width: 80px;
             height: 80px;
             color: var(--snap-yellow);
-            animation: bounce 1.5s ease-out;
             transition: transform 0.3s;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-15px);}
-            60% {transform: translateY(-7px);}
         }
         
         h1 {
@@ -266,6 +260,7 @@
             ar: {
                 pageTitle: "مولد عناوين بالذكاء الاصطناعي", mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️", description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!", placeholder: "مثال: خدع سحرية، نصائح طبخ", button: "إنشاء العناوين", reset: "إعادة تعيين", alert: "يرجى إدخال موضوع!", copied: "تم النسخ!",
                 topics: {
+                    // These templates are grammatically correct Arabic sentences, avoiding word mixing.
                     "COOK": { emoji: "🍳🤤", templates: ["🤯 أسرار [KEYWORD] التي تحتاجها الآن!", "وصفات [KEYWORD] سهلة جننت الإنترنت! 💯", "السر [KEYWORD] الذي غير حياتي! 🤫", "توقف عن أخطاء [KEYWORD] هذه! 🙅‍♀️"] },
                     "FITNESS": { emoji: "💪🔥", templates: ["تمرينة [KEYWORD] 5 دقائق لحرق الدهون 🔥", "السر [KEYWORD] للحصول على عضلات بطن خرافية! 🏆", "هكذا يتمرن محترفو [KEYWORD] الآن! ⚡️", "نتائج [KEYWORD] فورية؟ شاهد الصدمة! 🤯"] },
                     "GAMING": { emoji: "🎮🔥", templates: ["هذه استراتيجية [KEYWORD] مكسورة! 🤯", "أجنّ جنون [KEYWORD] لهذا الأسبوع! 😱", "الكشف عن إعدادات [KEYWORD] السرية! 🤫", "10 أشياء لا أحد يخبرك بها عن [KEYWORD] 😲"] },
@@ -283,7 +278,6 @@
                     "DEFAULT": { emoji: "✨🔥", templates: ["🤯 La Vérité [KEYWORD] que personne ne vous dit! 🤫", "Vous ne CROIREZ jamais ce qui s'est passé ensuite! 😱", "Le Guide ULTIME de [KEYWORD] pour DÉBUTANTS! 💯", "Ce [KEYWORD] a TOUT changé! 🚀"] }
                 }
             },
-            // ... (Other languages follow the same topic structure)
             es: {
                 pageTitle: "Generador de Títulos IA", mainTitle: "Generador de Títulos IA ⚡️", description: "¡Ingresa tu tema para 4 títulos impulsados por IA!", placeholder: "ej. : Trucos de Magia, Consejos de Cocina", button: "Generar Títulos", reset: "Restablecer", alert: "¡Por favor ingresa un tema!", copied: "¡Copiado!",
                 topics: {
@@ -370,7 +364,6 @@
             const titlesSet = new Set();
             const langTopics = langData.topics; // Get topic templates for the current language
             const topicUpper = topic.toUpperCase();
-            const keyWords = topic.split(' ');
 
             // 1. Identify Best Topic Match (AI-like classification)
             let bestTopic = langTopics.DEFAULT;
@@ -380,16 +373,15 @@
             
             for (const key of enTopicKeys) {
                 // Check if the input topic contains any of the English keywords
-                if (topicUpper.includes(key)) {
+                if (topicUpper.includes(key) || topicUpper.includes(translations.en.topics[key].emoji)) {
                     // If a match is found, use the corresponding template set from the current language
                     bestTopic = langTopics[key];
                     break; 
                 }
             }
 
-            // Fallback for keyWord extraction (use first two words of input)
-            // This is the keyword that gets inserted into the translated templates.
-            const keywordToInsert = keyWords.slice(0, 2).join(' ');
+            // Keyword extraction (use the full input topic as the keyword)
+            const keywordToInsert = topic;
 
             const maxAttempts = 20;
             let attempts = 0;
@@ -410,11 +402,23 @@
 
                 // Inject specific topic emoji
                 const emojiToPrepend = bestTopic.emoji.split(' ')[Math.floor(Math.random() * bestTopic.emoji.split(' ').length)];
-                title = `${emojiToPrepend} ${title}`;
+                
+                // Ensure correct placement based on language direction
+                if (currentLang === 'ar') {
+                     title = `${title} ${emojiToPrepend}`;
+                } else {
+                     title = `${emojiToPrepend} ${title}`;
+                }
                 
                 // Ensure under 50 characters (Snapchat limit is strict)
                 if (title.length > 50) {
-                    title = title.substring(0, 47) + '...';
+                    // Truncate based on language direction
+                    if (currentLang === 'ar') {
+                         title = title.substring(0, 47) + '...';
+                    } else {
+                         title = title.substring(0, 47) + '...';
+                    }
+                   
                 }
 
                 if (!titlesSet.has(title)) {
@@ -442,8 +446,15 @@
                 copyBtn.setAttribute('onclick', `copyToClipboard('${cleanTitle}', this)`);
                 copyBtn.setAttribute('aria-label', 'Copy Title');
 
-                container.appendChild(textSpan);
-                container.appendChild(copyBtn);
+                // Adjust copy button position for RTL
+                if (currentLang === 'ar') {
+                    container.appendChild(copyBtn);
+                    container.appendChild(textSpan);
+                } else {
+                    container.appendChild(textSpan);
+                    container.appendChild(copyBtn);
+                }
+                
                 titlesDiv.appendChild(container);
             });
         }

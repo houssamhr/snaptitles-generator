@@ -251,91 +251,68 @@
     </div>
 
     <script>
-        // --- Standard Translations & Word Pools (UPDATED FOR GENERATION) ---
+        // --- Multilingual Topic-Based Template Engine ---
         const translations = {
             en: {
-                pageTitle: "AI Clickbait Title Generator",
-                mainTitle: "AI Title Generator ⚡️",
-                description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!",
-                placeholder: "e.g., Magic Tricks, Cooking Hacks",
-                button: "Generate Titles",
-                reset: "Reset",
-                alert: "Please enter a topic!",
-                copied: "Copied!",
-                // Words for title generation
-                verbs: ["🤯 ULTIMATE", "EASY", "The SECRET", "STOP"],
-                adjectives: ["HACKS YOU NEED!", "RECIPES that broke the Internet! 💯", "Secret that changed my life! 🤫", "making mistakes like this! 🙅‍♀️"],
-                phrases: ["🔥", "🏆", "⚡️", "😲"] // Emojis/Short phrases
+                pageTitle: "AI Clickbait Title Generator", mainTitle: "AI Title Generator ⚡️", description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 4 AI-powered titles!", placeholder: "e.g., Magic Tricks, Cooking Hacks", button: "Generate Titles", reset: "Reset", alert: "Please enter a topic!", copied: "Copied!",
+                topics: {
+                    "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMATE [KEYWORD] HACKS YOU NEED!", "EASY [KEYWORD] RECIPES that broke the Internet! 💯", "The [KEYWORD] Secret that changed my life! 🤫", "STOP making [KEYWORD] mistakes like this! 🙅‍♀️"] },
+                    "FITNESS": { emoji: "💪🔥", templates: ["5-MIN [KEYWORD] That Burn MAX Fat! 🔥", "The [KEYWORD] Secret To INSANE Abs! 🏆", "This is how [KEYWORD] pros train NOW! ⚡️", "INSTANT [KEYWORD] RESULTS?! Shocking! 🤯"] },
+                    "GAMING": { emoji: "🎮🔥", templates: ["This [KEYWORD] STRATEGY is broken! 🤯", "The CRAZIEST [KEYWORD] Moments of the week! 😱", "My SECRET [KEYWORD] settings revealed! 🤫", "10 things NO ONE tells you about [KEYWORD] 😲"] },
+                    "BEAUTY": { emoji: "💄✨", templates: ["[KEYWORD] TRANSFORMATION that blew my mind! 💖", "EASY [KEYWORD] Tricks for Beginners! 💅", "Must-HAVE [KEYWORD] HACKS for perfect skin! 🤩", "The ONLY [KEYWORD] products worth buying! 💸"] },
+                    "DEFAULT": { emoji: "✨🔥", templates: ["🤯 The [KEYWORD] Truth Nobody Tells You! 🤫", "You Won't BELIEVE What Happened Next! 😱", "The Ultimate [KEYWORD] Guide for BEGINNERS! 💯", "This [KEYWORD] CHANGED EVERYTHING! 🚀"] }
+                }
             },
             ar: {
-                pageTitle: "مولد عناوين بالذكاء الاصطناعي",
-                mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️",
-                description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!",
-                placeholder: "مثال: خدع سحرية، نصائح طبخ",
-                button: "إنشاء العناوين",
-                reset: "إعادة تعيين",
-                alert: "يرجى إدخال موضوع!",
-                copied: "تم النسخ!",
-                // الكلمات لتوليد العناوين (Words for title generation)
-                verbs: ["🤯 أفضل", "سهل", "السر", "توقف عن"],
-                adjectives: ["طرق تحتاجها!", "وصفات اجتاحت الإنترنت! 💯", "السر الذي غير حياتي! 🤫", "ارتكاب أخطاء كهذه! 🙅‍♀️"],
-                phrases: ["🔥", "🏆", "⚡️", "😲"]
+                pageTitle: "مولد عناوين بالذكاء الاصطناعي", mainTitle: "مولد العناوين بالذكاء الاصطناعي ⚡️", description: "أدخل موضوع الفيديو للحصول على 4 عناوين مدعومة بالذكاء الاصطناعي!", placeholder: "مثال: خدع سحرية، نصائح طبخ", button: "إنشاء العناوين", reset: "إعادة تعيين", alert: "يرجى إدخال موضوع!", copied: "تم النسخ!",
+                topics: {
+                    "COOK": { emoji: "🍳🤤", templates: ["🤯 أسرار [KEYWORD] التي تحتاجها الآن!", "وصفات [KEYWORD] سهلة جننت الإنترنت! 💯", "السر [KEYWORD] الذي غير حياتي! 🤫", "توقف عن أخطاء [KEYWORD] هذه! 🙅‍♀️"] },
+                    "FITNESS": { emoji: "💪🔥", templates: ["تمرينة [KEYWORD] 5 دقائق لحرق الدهون 🔥", "السر [KEYWORD] للحصول على عضلات بطن خرافية! 🏆", "هكذا يتمرن محترفو [KEYWORD] الآن! ⚡️", "نتائج [KEYWORD] فورية؟ شاهد الصدمة! 🤯"] },
+                    "GAMING": { emoji: "🎮🔥", templates: ["هذه استراتيجية [KEYWORD] مكسورة! 🤯", "أجنّ جنون [KEYWORD] لهذا الأسبوع! 😱", "الكشف عن إعدادات [KEYWORD] السرية! 🤫", "10 أشياء لا أحد يخبرك بها عن [KEYWORD] 😲"] },
+                    "BEAUTY": { emoji: "💄✨", templates: ["تحول [KEYWORD] مذهل فجر عقلي! 💖", "أسهل خدع [KEYWORD] للمبتدئين! 💅", "أفضل حيل [KEYWORD] للحصول على بشرة مثالية! 🤩", "منتجات [KEYWORD] الوحيدة التي تستحق الشراء! 💸"] },
+                    "DEFAULT": { emoji: "✨🔥", templates: ["🤯 الحقيقة التي لا أحد يخبرك بها عن [KEYWORD]! 🤫", "لن تصدق ما حدث بعد ذلك! 😱", "الدليل الشامل لـ [KEYWORD] للمبتدئين! 💯", "هذا الـ [KEYWORD] غيّر كل شيء! 🚀"] }
+                }
             },
             fr: {
-                pageTitle: "Générateur de Titres IA",
-                mainTitle: "Générateur de Titres IA ⚡️",
-                description: "Entrez votre sujet (ex. : Tours de Magie) pour 4 titres boostés par l'IA !",
-                placeholder: "ex. : Tours de Magie, Astuces Cuisine",
-                button: "Générer les Titres",
-                reset: "Réinitialiser",
-                alert: "Veuillez entrer un sujet !",
-                copied: "Copié !",
-                // Mots pour la génération de titres
-                verbs: ["🤯 ULTIME", "FACILE", "Le SECRET", "ARRÊTEZ de"],
-                adjectives: ["ASTUCES dont vous avez besoin!", "RECETTES qui ont explosé Internet! 💯", "Secret qui a changé ma vie! 🤫", "faire ces erreurs! 🙅‍♀️"],
-                phrases: ["🔥", "🏆", "⚡️", "😲"]
+                pageTitle: "Générateur de Titres IA", mainTitle: "Générateur de Titres IA ⚡️", description: "Entrez votre sujet (ex. : Tours de Magie) pour 4 titres boostés par l'IA !", placeholder: "ex. : Tours de Magie, Astuces Cuisine", button: "Générer les Titres", reset: "Réinitialiser", alert: "Veuillez entrer un sujet !", copied: "Copié !",
+                topics: {
+                    "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMES ASTUCES [KEYWORD] dont vous avez besoin!", "RECETTES [KEYWORD] FACILES qui ont cassé Internet! 💯", "Le Secret [KEYWORD] qui a changé ma vie! 🤫", "ARRÊTEZ de faire ces erreurs [KEYWORD]! 🙅‍♀️"] },
+                    "FITNESS": { emoji: "💪🔥", templates: ["[KEYWORD] 5 minutes qui brûle un MAX de graisse! 🔥", "Le Secret [KEYWORD] pour des abdos de fou! 🏆", "C'est comme ça que les pros du [KEYWORD] s'entraînent! ⚡️", "RÉSULTATS [KEYWORD] INSTANTANÉS?! Choquant! 🤯"] },
+                    "GAMING": { emoji: "🎮🔥", templates: ["Cette STRATÉGIE [KEYWORD] est cassée! 🤯", "Les Moments [KEYWORD] les PLUS FOUS de la semaine! 😱", "Mes réglages [KEYWORD] SECRETS révélés! 🤫", "10 choses que PERSONNE ne vous dit sur [KEYWORD] 😲"] },
+                    "BEAUTY": { emoji: "💄✨", templates: ["TRANSFORMATION [KEYWORD] qui m'a époustouflé! 💖", "Astuces [KEYWORD] FACILES pour débutants! 💅", "HACKS [KEYWORD] indispensables pour une peau parfaite! 🤩", "Les SEULS produits [KEYWORD] qui valent le coup! 💸"] },
+                    "DEFAULT": { emoji: "✨🔥", templates: ["🤯 La Vérité [KEYWORD] que personne ne vous dit! 🤫", "Vous ne CROIREZ jamais ce qui s'est passé ensuite! 😱", "Le Guide ULTIME de [KEYWORD] pour DÉBUTANTS! 💯", "Ce [KEYWORD] a TOUT changé! 🚀"] }
+                }
             },
+            // ... (Other languages follow the same topic structure)
             es: {
-                pageTitle: "Generador de Títulos IA",
-                mainTitle: "Generador de Títulos IA ⚡️",
-                description: "¡Ingresa tu tema para 4 títulos impulsados por IA!",
-                placeholder: "ej. : Trucos de Magia, Consejos de Cocina",
-                button: "Generar Títulos",
-                reset: "Restablecer",
-                alert: "¡Por favor ingresa un tema!",
-                copied: "¡Copiado!",
-                // Palabras para la generación de títulos
-                verbs: ["🤯 LO MEJOR", "FÁCIL", "El SECRETO", "DEJA de"],
-                adjectives: ["TRUCOS que necesitas!", "RECETAS que rompieron el Internet! 💯", "Secreto que cambió mi vida! 🤫", "cometer errores como este! 🙅‍♀️"],
-                phrases: ["🔥", "🏆", "⚡️", "😲"]
+                pageTitle: "Generador de Títulos IA", mainTitle: "Generador de Títulos IA ⚡️", description: "¡Ingresa tu tema para 4 títulos impulsados por IA!", placeholder: "ej. : Trucos de Magia, Consejos de Cocina", button: "Generar Títulos", reset: "Restablecer", alert: "¡Por favor ingresa un tema!", copied: "¡Copiado!",
+                topics: {
+                    "COOK": { emoji: "🍳🤤", templates: ["🤯 ¡LOS HACKS [KEYWORD] DEFINITIVOS que necesitas!", "¡RECETAS [KEYWORD] FÁCILES que rompieron el Internet! 💯", "¡El Secreto [KEYWORD] que cambió mi vida! 🤫", "¡DEJA de cometer errores [KEYWORD] como este! 🙅‍♀️"] },
+                    "FITNESS": { emoji: "💪🔥", templates: ["[KEYWORD] de 5 MIN que quema la MÁXIMA grasa! 🔥", "¡El Secreto [KEYWORD] para unos abdominales de LOCURA! 🏆", "¡Así es como entrenan los profesionales de [KEYWORD] AHORA! ⚡️", "¿¡RESULTADOS [KEYWORD] INSTANTÁNEOS?! ¡Increíble! 🤯"] },
+                    "GAMING": { emoji: "🎮🔥", templates: ["¡Esta ESTRATEGIA [KEYWORD] está rota! 🤯", "¡Los Momentos [KEYWORD] MÁS LOCOS de la semana! 😱", "¡Mis ajustes SECRETOS de [KEYWORD] revelados! 🤫", "10 cosas que NADIE te dice sobre [KEYWORD] 😲"] },
+                    "BEAUTY": { emoji: "💄✨", templates: ["¡TRANSFORMACIÓN [KEYWORD] que me voló la cabeza! 💖", "¡Trucos [KEYWORD] FÁCILES para principiantes! 💅", "¡HACKS [KEYWORD] imprescindibles para una piel perfecta! 🤩", "¡Los ÚNICOS productos [KEYWORD] que valen la pena! 💸"] },
+                    "DEFAULT": { emoji: "✨🔥", templates: ["🤯 La Verdad [KEYWORD] que nadie te dice! 🤫", "¡No vas a CREER lo que pasó después! 😱", "La Guía [KEYWORD] definitiva para PRINCIPIANTES! 💯", "¡Este [KEYWORD] CAMBIÓ TODO! 🚀"] }
+                }
             },
             de: {
-                pageTitle: "KI-Titel-Generator",
-                mainTitle: "KI-Titel-Generator ⚡️",
-                description: "Gib dein Thema ein (z.B. Kochtipps) für 4 KI-gestützte Titel!",
-                placeholder: "z.B. Zaubertricks, Kochtipps",
-                button: "Titel Generieren",
-                reset: "Zurücksetzen",
-                alert: "Bitte gib ein Thema ein!",
-                copied: "Kopiert!",
-                // Wörter für die Titelgenerierung
-                verbs: ["🤯 ULTIMATIVE", "EINFACHE", "Das GEHEIMNIS", "HÖRE auf"],
-                adjectives: ["HACKS die du brauchst!", "REZEPTE die das Internet gesprengt haben! 💯", "Geheimnis das mein Leben verändert hat! 🤫", "diese Fehler zu machen! 🙅‍♀️"],
-                phrases: ["🔥", "🏆", "⚡️", "😲"]
+                pageTitle: "KI-Titel-Generator", mainTitle: "KI-Titel-Generator ⚡️", description: "Gib dein Thema ein (z.B. Kochtipps) für 4 KI-gestützte Titel!", placeholder: "z.B. Zaubertricks, Kochtipps", button: "Titel Generieren", reset: "Zurücksetzen", alert: "Bitte gib ein Thema ein!", copied: "Kopiert!",
+                topics: {
+                    "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMATIVE [KEYWORD] HACKS, die du brauchst!", "EINFACHE [KEYWORD] REZEPTE, die das Internet gesprengt haben! 💯", "Das [KEYWORD] Geheimnis, das mein Leben verändert hat! 🤫", "HÖRE auf, DIESE [KEYWORD] Fehler zu machen! 🙅‍♀️"] },
+                    "FITNESS": { emoji: "💪🔥", templates: ["5-MIN [KEYWORD], der MAXIMAL Fett verbrennt! 🔥", "Das [KEYWORD] Geheimnis für EINEN IRREN Sixpack! 🏆", "So trainieren [KEYWORD] Pros JETZT! ⚡️", "SOFORTIGE [KEYWORD] ERGEBNISSE?! Schockierend! 🤯"] },
+                    "GAMING": { emoji: "🎮🔥", templates": ["Diese [KEYWORD] STRATEGIE ist broken! 🤯", "Die VERRÜCKTESTEN [KEYWORD] Momente der Woche! 😱", "Meine GEHEIMEN [KEYWORD] Einstellungen enthüllt! 🤫", "10 Dinge, die dir NIEMAND über [KEYWORD] sagt! 😲"] },
+                    "BEAUTY": { emoji: "💄✨", templates": ["[KEYWORD] TRANSFORMATION, die mich umgehauen hat! 💖", "EINFACHE [KEYWORD] Tricks für Anfänger! 💅", "Must-HAVE [KEYWORD] HACKS für perfekte Haut! 🤩", "Die EINZIGEN [KEYWORD] Produkte, die es wert sind! 💸"] },
+                    "DEFAULT": { emoji: "✨🔥", templates": ["🤯 Die [KEYWORD] Wahrheit, die dir niemand erzählt! 🤫", "Du wirst NICHT glauben, was als Nächstes passiert ist! 😱", "Der ULTIMATIVE [KEYWORD] Guide für ANFÄNGER! 💯", "Dieser [KEYWORD] hat ALLES verändert! 🚀"] }
+                }
             },
             it: {
-                pageTitle: "Generatore di Titoli IA",
-                mainTitle: "Generatore di Titoli IA ⚡️",
-                description: "Inserisci il tuo argomento per 4 titoli basati sull'IA!",
-                placeholder: "es. Trucchi Magici, Consigli Cucina",
-                button: "Genera Titoli",
-                reset: "Ripristina",
-                alert: "Per favore inserisci un argomento!",
-                copied: "Copiato!",
-                // Parole per la generazione di titoli
-                verbs: ["🤯 ULTIMO", "FACILE", "Il SEGRETO", "SMETTI di"],
-                adjectives: ["TRUCCHI di cui hai bisogno!", "RICETTE che hanno sconvolto Internet! 💯", "Segreto che ha cambiato la mia vita! 🤫", "fare questi errori! 🙅‍♀️"],
-                phrases: ["🔥", "🏆", "⚡️", "😲"]
+                pageTitle: "Generatore di Titoli IA", mainTitle: "Generatore di Titoli IA ⚡️", description: "Inserisci il tuo argomento per 4 titoli basati sull'IA!", placeholder: "es. Trucchi Magici, Consigli Cucina", button: "Genera Titoli", reset: "Ripristina", alert: "Per favore inserisci un argomento!", copied: "Copiato!",
+                topics: {
+                    "COOK": { emoji: "🍳🤤", templates: ["🤯 ULTIMI HACKS [KEYWORD] di cui hai bisogno!", "RICETTE [KEYWORD] FACILI che hanno rotto Internet! 💯", "Il Segreto [KEYWORD] che mi ha cambiato la vita! 🤫", "SMETTI di fare questi errori [KEYWORD]! 🙅‍♀️"] },
+                    "FITNESS": { emoji: "💪🔥", templates": ["[KEYWORD] da 5 MIN che bruciano il grasso MAX! 🔥", "Il Segreto [KEYWORD] per addominali PAZZESCHI! 🏆", "Ecco come si allenano i professionisti del [KEYWORD] ORA! ⚡️", "RISULTATI [KEYWORD] ISTANTANEI?! Scioccante! 🤯"] },
+                    "GAMING": { emoji: "🎮🔥", templates": ["Questa STRATEGIA [KEYWORD] è rotta! 🤯", "I Momenti [KEYWORD] PIÙ PAZZI della settimana! 😱", "Le mie impostazioni [KEYWORD] SEGRETE rivelate! 🤫", "10 cose che NESSUNO ti dice su [KEYWORD] 😲"] },
+                    "BEAUTY": { emoji: "💄✨", templates": ["TRASFORMAZIONE [KEYWORD] che mi ha sbalordito! 💖", "Trucchi [KEYWORD] FACILI per principianti! 💅", "HACKS [KEYWORD] essenziali per una pelle perfetta! 🤩", "Gli UNICI prodotti [KEYWORD] che vale la pena comprare! 💸"] },
+                    "DEFAULT": { emoji: "✨🔥", templates": ["🤯 La Verità [KEYWORD] che nessuno ti dice! 🤫", "Non crederai mai a cosa è successo dopo! 😱", "La Guida ULTIMA a [KEYWORD] per PRINCIPIANTI! 💯", "Questo [KEYWORD] ha CAMBIATO TUTTO! 🚀"] }
+                }
             }
         };
 
@@ -345,13 +322,15 @@
             currentLang = document.getElementById('langSelect').value;
             const langData = translations[currentLang];
 
+            // Update UI text
             document.getElementById('pageTitle').textContent = langData.pageTitle;
             document.getElementById('mainTitle').textContent = langData.mainTitle;
             document.getElementById('description').textContent = langData.description;
             document.getElementById('topicInput').placeholder = langData.placeholder;
             document.getElementById('generateBtn').textContent = langData.button;
             document.getElementById('resetBtn').textContent = langData.reset;
-
+            
+            // Handle RTL (Arabic)
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.body.style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
         }
@@ -373,11 +352,11 @@
             });
         }
         
-        // --- CORRECTED GENERATION LOGIC ---
+        // --- CORE GENERATION LOGIC (FIXED) ---
         function generateTitles() {
             const inputElement = document.getElementById('topicInput');
             const topic = inputElement.value.trim();
-            const langData = translations[currentLang]; // Get the data for the selected language
+            const langData = translations[currentLang]; 
 
             if (!topic) {
                 inputElement.classList.add('error');
@@ -389,33 +368,49 @@
 
             const titles = [];
             const titlesSet = new Set();
+            const langTopics = langData.topics; // Get topic templates for the current language
+            const topicUpper = topic.toUpperCase();
+            const keyWords = topic.split(' ');
+
+            // 1. Identify Best Topic Match (AI-like classification)
+            let bestTopic = langTopics.DEFAULT;
             
-            // Use the first word as the main keyword to insert into templates
-            const keywordToInsert = topic.split(' ')[0].toUpperCase(); 
+            // Use the ENGLISH keys (COOK, GAMING) for classification, but apply the chosen language's template
+            const enTopicKeys = Object.keys(translations.en.topics);
+            
+            for (const key of enTopicKeys) {
+                // Check if the input topic contains any of the English keywords
+                if (topicUpper.includes(key)) {
+                    // If a match is found, use the corresponding template set from the current language
+                    bestTopic = langTopics[key];
+                    break; 
+                }
+            }
+
+            // Fallback for keyWord extraction (use first two words of input)
+            // This is the keyword that gets inserted into the translated templates.
+            const keywordToInsert = keyWords.slice(0, 2).join(' ');
 
             const maxAttempts = 20;
             let attempts = 0;
 
-            // The number of available template slots is the minimum length of the three arrays
-            const numTemplates = Math.min(langData.verbs.length, langData.adjectives.length, langData.phrases.length);
-
-            // Generate 4 unique titles
+            // 2. Generate 4 unique titles from topic-specific templates
             while (titles.length < 4 && attempts < maxAttempts) {
                 attempts++;
                 
-                // Randomly select indices for the three parts
-                const index1 = Math.floor(Math.random() * numTemplates);
-                const index2 = Math.floor(Math.random() * numTemplates);
-                const index3 = Math.floor(Math.random() * numTemplates);
-
-                // Construct the title using the language-specific words
-                // Template structure: [VERB] + [KEYWORD] + [ADJECTIVE] + [PHRASE]
-                let title = `${langData.verbs[index1]} ${keywordToInsert} ${langData.adjectives[index2]} ${langData.phrases[index3]}`;
-
-                // Clean up and format
-                title = title
+                // Randomly select a template from the language-specific topic pool
+                const templates = bestTopic.templates;
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                
+                // Replace the [KEYWORD] placeholder with the user's input keyword
+                let title = template
+                    .replace(/\[KEYWORD\]/g, keywordToInsert)
                     .replace(/\s+/g, ' ') // Clean up extra spaces
                     .trim();
+
+                // Inject specific topic emoji
+                const emojiToPrepend = bestTopic.emoji.split(' ')[Math.floor(Math.random() * bestTopic.emoji.split(' ').length)];
+                title = `${emojiToPrepend} ${title}`;
                 
                 // Ensure under 50 characters (Snapchat limit is strict)
                 if (title.length > 50) {

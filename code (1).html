@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Snapchat Clickbait Title Generator</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #FFFC00 0%, #FFFFFF 50%, #000000 100%);
+            color: #333;
+            min-height: 100vh;
+            animation: fadeIn 1s ease-in;
+            transition: direction 0.3s; /* For RTL switch */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        h1 {
+            text-align: center;
+            color: #000;
+            font-size: 2em;
+            margin-bottom: 10px;
+            animation: bounceIn 1.5s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 80px;
+            height: 80px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .lang-selector {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid #FFFC00;
+            background-color: #FFF;
+        }
+        p {
+            text-align: center;
+            color: #000;
+            font-weight: bold;
+        }
+        input {
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #FFFC00;
+            border-radius: 10px;
+            background-color: #FFF;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input:focus {
+            border-color: #000;
+            box-shadow: 0 0 10px rgba(255, 252, 0, 0.5);
+            outline: none;
+        }
+        button {
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #FFFC00;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            background-color: #E6E600;
+        }
+        #titles {
+            margin-top: 20px;
+        }
+        .title {
+            background-color: #FFF;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #FFFC00;
+            animation: slideIn 0.5s ease-out;
+            transition: transform 0.2s;
+        }
+        .title:hover {
+            transform: translateY(-5px);
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Snapchat Logo SVG -->
+    <svg class="logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4h3V7h2v6h3l-4 4z" fill="#000"/>
+        <circle cx="12" cy="12" r="10" fill="#FFFC00" stroke="#000" stroke-width="2"/>
+        <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="#000"/>
+    </svg>
+    
+    <div class="lang-selector">
+        <label for="langSelect">🌍 Language: </label>
+        <select id="langSelect" onchange="changeLanguage()">
+            <option value="en">🇺🇸 English</option>
+            <option value="ar">🇸🇦 Arabic</option>
+            <option value="fr">🇫🇷 French</option>
+            <option value="es">🇪🇸 Spanish</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="it">🇮🇹 Italian</option>
+        </select>
+    </div>
+    
+    <h1 id="mainTitle">Snapchat Clickbait Title Generator</h1>
+    <p id="description">Enter a video title or topic, and get four engaging clickbait titles under 50 characters each!</p>
+    <input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks">
+    <button id="generateBtn" onclick="generateTitles()">Generate Titles</button>
+    <div id="titles"></div>
+
+    <script>
+        // Translations and word pools for dynamic title generation
+        const translations = {
+            en: {
+                pageTitle: "Snapchat Clickbait Title Generator",
+                mainTitle: "Snapchat Clickbait Title Generator",
+                description: "Enter a video title or topic, and get four engaging clickbait titles under 50 characters each!",
+                placeholder: "e.g., Magic Tricks, Cooking Hacks",
+                button: "Generate Titles",
+                alert: "Please enter a topic!",
+                verbs: ["Unleash", "Discover", "Master", "Reveal", "Unlock", "Explore"],
+                adjectives: ["Epic", "Secret", "Insane", "Hidden", "Ultimate", "Crazy"],
+                phrases: ["Secrets Now!", "Hacks Revealed!", "Magic Unfold!", "Tips Today!", "Tricks Exposed!", "Power Unleashed!"]
+            },
+            ar: {
+                pageTitle: "مولد عناوين جذابة لسناب شات",
+                mainTitle: "مولد عناوين جذابة لسناب شات",
+                description: "أدخل عنوان فيديو أو موضوعًا، واحصل على أربعة عناوين جذابة تحت 50 حرفًا!",
+                placeholder: "مثال: خدع سحرية، نصائح طبخ",
+                button: "إنشاء العناوين",
+                alert: "يرجى إدخال موضوع!",
+                verbs: ["اكشف", "اكتشف", "سيطر", "كشف", "فتح", "استكشف"],
+                adjectives: ["رائع", "سري", "مجنون", "مخفي", "نهائي", "غريب"],
+                phrases: ["الأسرار الآن!", "الخدع مكشوفة!", "السحر يتكشف!", "النصائح اليوم!", "الحيل مكشوفة!", "القوة محررة!"]
+            },
+            fr: {
+                pageTitle: "Générateur de Titres Clickbait Snapchat",
+                mainTitle: "Générateur de Titres Clickbait Snapchat",
+                description: "Entrez un titre de vidéo ou un sujet, et obtenez quatre titres accrocheurs en moins de 50 caractères !",
+                placeholder: "ex. : Tours de Magie, Astuces Cuisine",
+                button: "Générer les Titres",
+                alert: "Veuillez entrer un sujet !",
+                verbs: ["Dévoile", "Découvre", "Maîtrise", "Révéle", "Débloque", "Explore"],
+                adjectives: ["Épique", "Secret", "Fou", "Caché", "Ultime", "Dingue"],
+                phrases: ["Secrets Maintenant !", "Astuces Révélées !", "Magie se Déroule !", "Conseils Aujourd'hui !", "Trucs Exposés !", "Pouvoir Débloqué !"]
+            },
+            es: {
+                pageTitle: "Generador de Títulos Clickbait de Snapchat",
+                mainTitle: "Generador de Títulos Clickbait de Snapchat",
+                description: "Ingresa un título de video o tema, y obtén cuatro títulos atractivos en menos de 50 caracteres!",
+                placeholder: "ej. : Trucos de Magia, Consejos de Cocina",
+                button: "Generar Títulos",
+                alert: "¡Por favor ingresa un tema!",
+                verbs: ["Desvela", "Descubre", "Domina", "Revela", "Desbloquea", "Explora"],
+                adjectives: ["Épico", "Secreto", "Loco", "Oculto", "Definitivo", "Chiflado"],
+                phrases: ["¡Secretos Ahora!", "¡Trucos Revelados!", "¡Magia se Despliega!", "¡Consejos Hoy!", "¡Trucos Expuestos!", "¡Poder Desbloqueado!"]
+            },
+            de: {
+                pageTitle: "Snapchat Clickbait-Titel-Generator",
+                mainTitle: "Snapchat Clickbait-Titel-Generator",
+                description: "Gib einen Videotitel oder ein Thema ein und erhalte vier ansprechende Clickbait-Titel unter 50 Zeichen!",
+                placeholder: "z.B. Zaubertricks, Kochtipps",
+                button: "Titel Generieren",
+                alert: "Bitte gib ein Thema ein!",
+                verbs: ["Enthülle", "Entdecke", "Beherrsche", "Offenbare", "Entsperre", "Erkunde"],
+                adjectives: ["Episch", "Geheim", "Verrückt", "Versteckt", "Ultimativ", "Wahnsinnig"],
+                phrases: ["Geheimnisse Jetzt!", "Hacks Aufgedeckt!", "Magie Entfaltet!", "Tipps Heute!", "Tricks Enthüllt!", "Kraft Freigesetzt!"]
+            },
+            it: {
+                pageTitle: "Generatore di Titoli Clickbait Snapchat",
+                mainTitle: "Generatore di Titoli Clickbait Snapchat",
+                description: "Inserisci un titolo video o un argomento e ottieni quattro titoli accattivanti sotto 50 caratteri!",
+                placeholder: "es. Trucchi Magici, Consigli Cucina",
+                button: "Genera Titoli",
+                alert: "Per favore inserisci un argomento!",
+                verbs: ["Svela", "Scopri", "Padroneggia", "Rivela", "Sblocca", "Esplora"],
+                adjectives: ["Epico", "Segreto", "Pazzo", "Nascosto", "Definitivo", "Folle"],
+                phrases: ["Segreti Ora!", "Trucchi Rivelati!", "Magia si Svolge!", "Consigli Oggi!", "Trucchi Esposti!", "Potere Sbloccato!"]
+            }
+        };
+
+        let currentLang = 'en';
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            const langData = translations[currentLang];
+
+            // Update page elements
+            document.getElementById('pageTitle').textContent = langData.pageTitle;
+            document.getElementById('mainTitle').textContent = langData.mainTitle;
+            document.getElementById('description').textContent = langData.description;
+            document.getElementById('topicInput').placeholder = langData.placeholder;
+            document.getElementById('generateBtn').textContent = langData.button;
+
+            // Switch to RTL for Arabic
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.body.style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+        }
+
+        function generateTitles() {
+            const topic = document.getElementById('topicInput').value.trim();
+            if (!topic) {
+                alert(translations[currentLang].alert);
+                return;
+            }
+
+            const langData = translations[currentLang];
+            const titles = [];
+
+            // Extract a key word from the topic (simple heuristic: first word or main noun)
+            const keyWord = topic.split(' ')[0]; // E.g., "Cooking" from "Cooking Hacks"
+
+            // Generate 4 unique titles by randomizing combinations
+            for (let i = 0; i < 4; i++) {
+                const verb = langData.verbs[Math.floor(Math.random() * langData.verbs.length)];
+                const adjective = langData.adjectives[Math.floor(Math.random() * langData.adjectives.length)];
+                const phrase = langData.phrases[Math.floor(Math.random() * langData.phrases.length)];
+
+                // Build title: e.g., "Unleash Epic Cooking Secrets Now!"
+                let title = `${verb} ${adjective} ${keyWord} ${phrase}`;
+
+                // Ensure under 50 characters
+                if (title.length > 50) {
+                    title = title.substring(0, 47) + '...';
+                }
+
+                titles.push(title);
+            }
+
+            const titlesDiv = document.getElementById('titles');
+            titlesDiv.innerHTML = '';
+            titles.forEach((title, index) => {
+                const div = document.createElement('div');
+                div.className = 'title';
+                div.textContent = `${index + 1}. ${title}`;
+                titlesDiv.appendChild(div);
+            });
+        }
+
+        // Initialize with English
+        changeLanguage();
+    </script>
+</body>
+</html>

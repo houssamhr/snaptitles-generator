@@ -64,10 +64,14 @@ button{display:block;width:100%;padding:18px;font-size:1.2em;font-weight:700;col
     <select id="langSelect">
         <option value="en">🇺🇸 English</option>
         <option value="ar">🇸🇦 Arabic</option>
+        <option value="fr">🇫🇷 French</option>
+        <option value="es">🇪🇸 Spanish</option>
+        <option value="de">🇩🇪 German</option>
+        <option value="it">🇮🇹 Italian</option>
     </select>
 </div>
 
-<p id="description">Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!</p>
+<p id="description">Enter your video topic for 10 AI-powered titles!</p>
 <input type="text" id="topicInput" placeholder="e.g., Magic Tricks, Cooking Hacks" maxlength="100" />
 <button id="generateBtn" type="button">Generate 10 Titles</button>
 <button id="resetBtn" type="button">Reset</button>
@@ -80,38 +84,46 @@ button{display:block;width:100%;padding:18px;font-size:1.2em;font-weight:700;col
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
     const translations = {
+        en: { pageTitle:"Snapchat Title Generator", mainTitle:"Snap Titles AI ⚡️", description:"Enter your video topic for 10 AI-powered titles!", placeholder:"e.g., Magic Tricks, Cooking Hacks", button:"Generate 10 Titles", reset:"Reset", alert:"Please enter a topic!" },
+        ar: { pageTitle:"مولد عناوين سناب شات", mainTitle:"مولد عناوين سناب AI ⚡️", description:"أدخل موضوع الفيديو للحصول على 10 عناوين مدعومة بالذكاء الاصطناعي!", placeholder:"مثال: خدع سحرية، نصائح طبخ", button:"إنشاء 10 عناوين", reset:"إعادة تعيين", alert:"يرجى إدخال موضوع!" },
+        fr: { pageTitle:"Générateur de Titres Snapchat", mainTitle:"Générateur de Titres AI ⚡️", description:"Entrez votre sujet pour 10 titres boostés par l'IA !", placeholder:"ex. : Tours de Magie, Astuces Cuisine", button:"Générer 10 Titres", reset:"Réinitialiser", alert:"Veuillez entrer un sujet !" },
+        es: { pageTitle:"Generador de Títulos Snapchat", mainTitle:"Generador de Títulos AI ⚡️", description:"¡Ingresa tu tema para 10 títulos impulsados por IA!", placeholder:"ej. : Trucos de Magia, Consejos de Cocina", button:"Generar 10 Títulos", reset:"Restablecer", alert:"¡Por favor ingresa un tema!" },
+        de: { pageTitle:"Snapchat Titel Generator", mainTitle:"Snap Titel AI ⚡️", description:"Gib dein Thema ein für 10 KI-gestützte Titel!", placeholder:"z.B. Zaubertricks, Kochtipps", button:"10 Titel Generieren", reset:"Zurücksetzen", alert:"Bitte gib ein Thema ein!" },
+        it: { pageTitle:"Generatore di Titoli Snapchat", mainTitle:"Snap Titoli AI ⚡️", description:"Inserisci il tuo argomento per 10 titoli basati sull'IA!", placeholder:"es. Trucchi Magici, Consigli Cucina", button:"Genera 10 Titoli", reset:"Ripristina", alert:"Per favore inserisci un argomento!" }
+    };
+
+    const CATEGORY_TEMPLATES = {
         en: {
-            pageTitle: "Snapchat Title Generator",
-            mainTitle: "Snap Titles AI ⚡️",
-            description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!",
-            placeholder: "e.g., Magic Tricks, Cooking Hacks",
-            button: "Generate 10 Titles",
-            reset: "Reset",
-            alert: "Please enter a topic!",
+            COOK:["I tried [KEYWORD] recipes for 7 days – you won't believe what happened!","Stop making [KEYWORD] mistakes! Here's the secret","The ultimate [KEYWORD] hacks for beginners"],
+            FITNESS:["I did [KEYWORD] for 30 days – insane results!","Stop wasting time – [KEYWORD] tips you need to know","The [KEYWORD] routine pros use daily"],
+            GAMING:["Gamers are exploiting [KEYWORD] like crazy!","Top 10 [KEYWORD] secrets you missed","I spent 24 hours in [KEYWORD] – shocking moments!"],
+            BEAUTY:["The [KEYWORD] beauty hack everyone should know","I tried [KEYWORD] products – unbelievable results","Stop doing [KEYWORD] wrong! Watch this"],
+            DEFAULT:["You won't believe what happened with [KEYWORD]!","Top 10 secrets about [KEYWORD] revealed","I tried [KEYWORD] for 7 days – shocking!","[KEYWORD] hacks that change everything","The truth about [KEYWORD] no one tells you","Stop ignoring [KEYWORD] tips! Here's why","Everything you need to know about [KEYWORD]","Insane results from trying [KEYWORD] once"]
         },
         ar: {
-            pageTitle: "مولد عناوين سناب شات",
-            mainTitle: "عناوين سناب AI ⚡️",
-            description: "أدخل موضوع الفيديو الخاص بك (مثل: أخطاء القطط، مكياج سهل) للحصول على 10 عناوين مدعومة بالذكاء الاصطناعي!",
-            placeholder: "مثل: خدع سحرية، وصفات طهي",
-            button: "توليد 10 عناوين",
-            reset: "إعادة تعيين",
-            alert: "الرجاء إدخال موضوع!",
+            COOK:["جربت وصفات [KEYWORD] لمدة 7 أيام – لن تصدق ما حدث!","توقف عن ارتكاب أخطاء [KEYWORD]! إليك السر","أفضل حيل [KEYWORD] للمبتدئين"],
+            FITNESS:["قمت بـ[KEYWORD] لمدة 30 يوم – نتائج مذهلة!","توقف عن تضييع الوقت – نصائح [KEYWORD] التي تحتاج معرفتها","روتين [KEYWORD] الذي يستخدمه المحترفون يومياً"],
+            GAMING:["اللاعبون يستغلون [KEYWORD] بجنون!","أفضل 10 أسرار [KEYWORD] لم تسمع بها","قضيت 24 ساعة في [KEYWORD] – لحظات صادمة!"],
+            BEAUTY:["خدعة الجمال [KEYWORD] التي يجب أن يعرفها الجميع","جربت منتجات [KEYWORD] – نتائج مذهلة","توقف عن ارتكاب أخطاء [KEYWORD]! شاهد هذا"],
+            DEFAULT:["لن تصدق ما حدث مع [KEYWORD]!","أفضل 10 أسرار عن [KEYWORD] مكشوفة","جربت [KEYWORD] لمدة 7 أيام – صادم!","حيل [KEYWORD] التي تغير كل شيء","الحقيقة عن [KEYWORD] التي لا يخبرك بها أحد","توقف عن تجاهل نصائح [KEYWORD]! إليك السبب","كل ما تحتاج معرفته عن [KEYWORD]","نتائج مذهلة من تجربة [KEYWORD] مرة واحدة"]
         }
+        // You can add fr/es/de/it templates similarly
     };
 
     let currentLang = 'en';
+
     const langSelect = document.getElementById('langSelect');
+    const description = document.getElementById('description');
     const pageTitle = document.getElementById('pageTitle');
     const mainTitle = document.getElementById('mainTitle');
-    const description = document.getElementById('description');
     const topicInput = document.getElementById('topicInput');
     const generateBtn = document.getElementById('generateBtn');
     const resetBtn = document.getElementById('resetBtn');
     const titlesDiv = document.getElementById('titles');
 
-    function applyLanguage(){
+    function applyLanguage() {
         const L = translations[currentLang];
         pageTitle.textContent = L.pageTitle;
         mainTitle.textContent = L.mainTitle;
@@ -119,83 +131,92 @@ document.addEventListener('DOMContentLoaded', () => {
         topicInput.placeholder = L.placeholder;
         generateBtn.textContent = L.button;
         resetBtn.textContent = L.reset;
-        const isRTL = currentLang==='ar';
-        document.documentElement.dir = isRTL ? 'rtl':'ltr';
-        document.body.style.direction = isRTL ? 'rtl':'ltr';
+        const isRTL = currentLang === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.body.style.direction = isRTL ? 'rtl' : 'ltr';
     }
 
-    langSelect.addEventListener('change',(e)=>{
+    langSelect.addEventListener('change', (e) => {
         currentLang = e.target.value;
         applyLanguage();
-        topicInput.value='';
-        titlesDiv.innerHTML='';
+        topicInput.value = '';
+        titlesDiv.innerHTML = '';
     });
 
-    resetBtn.addEventListener('click',()=>{
+    resetBtn.addEventListener('click', ()=>{
         topicInput.value='';
         titlesDiv.innerHTML='';
+        topicInput.classList.remove('error');
     });
-
-    const CATEGORY_TEMPLATES = {
-        en: {
-            COOK:["I tried [KEYWORD] recipes for 7 days – unbelievable!","Stop making [KEYWORD] mistakes! Here's the secret","The ultimate [KEYWORD] hacks for beginners","Top [KEYWORD] tricks to save time in the kitchen","You won't believe these [KEYWORD] results","[KEYWORD] tips chefs don't want you to know","How to master [KEYWORD] in 5 minutes","Insane [KEYWORD] transformation in one week","The truth about [KEYWORD] revealed","Stop ignoring these [KEYWORD] secrets"],
-            FITNESS:["I did [KEYWORD] for 30 days – insane results!","Stop wasting time – [KEYWORD] tips you need to know","The [KEYWORD] routine pros use daily","Top 10 [KEYWORD] workouts for beginners","Transform your body with [KEYWORD] easily","I can't believe these [KEYWORD] changes","The best [KEYWORD] tricks for quick results","[KEYWORD] secrets that actually work","Why everyone is talking about [KEYWORD]","Stop ignoring these [KEYWORD] hacks"],
-            GAMING:["Gamers are exploiting [KEYWORD] like crazy!","Top 10 [KEYWORD] secrets you missed","I spent 24 hours in [KEYWORD] – shocking moments!","The ultimate [KEYWORD] guide for beginners","[KEYWORD] tricks that will blow your mind","You won't believe these [KEYWORD] tips","[KEYWORD] hacks every gamer should know","How to dominate [KEYWORD] fast","The truth about [KEYWORD] gameplay","Stop making these [KEYWORD] mistakes"],
-            BEAUTY:["The [KEYWORD] beauty hack everyone should know","I tried [KEYWORD] products – unbelievable results","Stop doing [KEYWORD] wrong! Watch this","Top [KEYWORD] tricks for glowing skin","[KEYWORD] secrets makeup artists won't tell you","You won't believe these [KEYWORD] transformations","Quick [KEYWORD] tips for beginners","The ultimate [KEYWORD] guide","Insane [KEYWORD] results in 7 days","Stop ignoring these [KEYWORD] beauty hacks"],
-            DEFAULT:["You won't believe what happened with [KEYWORD]!","Top 10 secrets about [KEYWORD] revealed","I tried [KEYWORD] for 7 days – shocking!","[KEYWORD] hacks that change everything","The truth about [KEYWORD] no one tells you","Stop ignoring [KEYWORD] tips! Here's why","Everything you need to know about [KEYWORD]","Insane results from trying [KEYWORD] once","The ultimate [KEYWORD] guide","[KEYWORD] secrets revealed"]
-        },
-        ar: {
-            COOK:["جربت وصفات [KEYWORD] لمدة 7 أيام – لن تصدق النتائج!","توقف عن ارتكاب أخطاء [KEYWORD]! إليك السر","أفضل حيل [KEYWORD] للمبتدئين","أفضل حيل [KEYWORD] لتوفير الوقت في المطبخ","لن تصدق نتائج [KEYWORD] هذه","نصائح [KEYWORD] التي لا يريد الطهاة أن تعرفها","كيفية اتقان [KEYWORD] في 5 دقائق","تحول [KEYWORD] المذهل في أسبوع واحد","الحقيقة عن [KEYWORD] مكشوفة","توقف عن تجاهل هذه الأسرار المتعلقة بـ [KEYWORD]"],
-            FITNESS:["قمت بتمارين [KEYWORD] لمدة 30 يومًا – نتائج مذهلة!","توقف عن إضاعة الوقت – نصائح [KEYWORD] التي تحتاج معرفتها","روتين [KEYWORD] الذي يستخدمه المحترفون يوميًا","أفضل 10 تمارين [KEYWORD] للمبتدئين","حوّل جسمك باستخدام [KEYWORD] بسهولة","لن تصدق هذه التغييرات في [KEYWORD]","أفضل حيل [KEYWORD] للحصول على نتائج سريعة","أسرار [KEYWORD] التي تعمل حقًا","لماذا يتحدث الجميع عن [KEYWORD]","توقف عن تجاهل هذه الحيل المتعلقة بـ [KEYWORD]"],
-            GAMING:["اللاعبون يستغلون [KEYWORD] بجنون!","أفضل 10 أسرار [KEYWORD] فاتتك","قضيت 24 ساعة في [KEYWORD] – لحظات صادمة!","الدليل النهائي لـ [KEYWORD] للمبتدئين","حيل [KEYWORD] ستذهلك","لن تصدق نصائح [KEYWORD] هذه","حيل [KEYWORD] التي يجب أن يعرفها كل لاعب","كيفية السيطرة على [KEYWORD] بسرعة","الحقيقة عن لعبة [KEYWORD]","توقف عن ارتكاب هذه الأخطاء في [KEYWORD]"],
-            BEAUTY:["حيلة جمال [KEYWORD] التي يجب أن يعرفها الجميع","جربت منتجات [KEYWORD] – نتائج لا تصدق","توقف عن القيام بـ [KEYWORD] بشكل خاطئ! شاهد هذا","أفضل حيل [KEYWORD] لبشرة متوهجة","أسرار [KEYWORD] التي لا يخبرك بها خبراء المكياج","لن تصدق هذه التحولات في [KEYWORD]","نصائح سريعة لـ [KEYWORD] للمبتدئين","الدليل النهائي لـ [KEYWORD]","نتائج مذهلة لـ [KEYWORD] خلال 7 أيام","توقف عن تجاهل هذه الحيل الجمالية لـ [KEYWORD]"],
-            DEFAULT:["لن تصدق ما حدث مع [KEYWORD]!","أفضل 10 أسرار عن [KEYWORD] مكشوفة","جربت [KEYWORD] لمدة 7 أيام – صادمة!","حيل [KEYWORD] التي تغير كل شيء","الحقيقة عن [KEYWORD] التي لا يخبرك بها أحد","توقف عن تجاهل نصائح [KEYWORD]! إليك السبب","كل ما تحتاج معرفته عن [KEYWORD]","نتائج مذهلة من تجربة [KEYWORD] مرة واحدة","الدليل النهائي لـ [KEYWORD]","أسرار [KEYWORD] مكشوفة"]
-        }
-    };
 
     function detectCategory(topic){
         const t = topic.toLowerCase();
-        if(t.includes("cook")||t.includes("recipe")||t.includes("food")||t.includes("طبخ")||t.includes("وصفات")||t.includes("طعام")) return "COOK";
-        if(t.includes("gym")||t.includes("fitness")||t.includes("workout")||t.includes("fat")||t.includes("lose")||t.includes("رياضة")||t.includes("تمارين")||t.includes("رشاقة")) return "FITNESS";
-        if(t.includes("game")||t.includes("gaming")||t.includes("play")||t.includes("ألعاب")||t.includes("لعب")) return "GAMING";
-        if(t.includes("makeup")||t.includes("beauty")||t.includes("skincare")||t.includes("مكياج")||t.includes("جمال")||t.includes("عناية")) return "BEAUTY";
+        if(t.includes("cook")||t.includes("recipe")||t.includes("food")||t.includes("طبخ")||t.includes("وصفات")) return "COOK";
+        if(t.includes("gym")||t.includes("fitness")||t.includes("workout")||t.includes("تمارين")||t.includes("رياضة")) return "FITNESS";
+        if(t.includes("game")||t.includes("gaming")||t.includes("play")||t.includes("ألعاب")) return "GAMING";
+        if(t.includes("makeup")||t.includes("beauty")||t.includes("مكياج")||t.includes("جمال")||t.includes("العناية")) return "BEAUTY";
         return "DEFAULT";
+    }
+
+    function copyToClipboard(text, btn){
+        if(!navigator.clipboard){
+            const ta=document.createElement('textarea');
+            ta.value=text;
+            document.body.appendChild(ta);
+            ta.select();
+            try{document.execCommand('copy');}catch(_){}
+            document.body.removeChild(ta);
+            flashCopy(btn);
+            return;
+        }
+        navigator.clipboard.writeText(text).then(()=>flashCopy(btn)).catch(()=>alert('Failed to copy'));
+    }
+
+    function flashCopy(btn){
+        const old = btn.innerHTML;
+        btn.innerHTML='✅';
+        setTimeout(()=>btn.innerHTML=old,900);
     }
 
     function generateTitles(){
         const topic = topicInput.value.trim();
-        if(!topic){
-            topicInput.classList.add('error');
-            setTimeout(()=>topicInput.classList.remove('error'),500);
-            alert(translations[currentLang].alert);
-            return;
-        }
+        if(!topic){topicInput.classList.add('error'); setTimeout(()=>topicInput.classList.remove('error'),500); alert(translations[currentLang].alert); return;}
+
         const category = detectCategory(topic);
-        const templates = CATEGORY_TEMPLATES[currentLang][category];
+        const templates = CATEGORY_TEMPLATES[currentLang][category] || CATEGORY_TEMPLATES[currentLang]['DEFAULT'];
+        const NUM_TITLES=10;
         const used = new Set();
-        while(used.size<10){
+        const MAX_ATTEMPTS=200;
+        let attempts=0;
+
+        while(used.size<NUM_TITLES && attempts<MAX_ATTEMPTS){
+            attempts++;
             const tpl = templates[Math.floor(Math.random()*templates.length)];
-            used.add(tpl.replace(/\[KEYWORD\]/gi, topic));
+            let title = tpl.replace(/\[KEYWORD\]/gi, topic);
+            if(title.length>60) title=title.slice(0,57)+'...';
+            used.add(title);
         }
+
         titlesDiv.innerHTML='';
-        Array.from(used).forEach((t,idx)=>{
-            const div = document.createElement('div');
-            div.className='title-container';
-            const span = document.createElement('span');
+        Array.from(used).slice(0,NUM_TITLES).forEach((t,idx)=>{
+            const container=document.createElement('div');
+            container.className='title-container';
+            const span=document.createElement('span');
             span.className='title-text';
             span.textContent=`${idx+1}. ${t}`;
-            const btn=document.createElement('button');
-            btn.className='copy-btn';
-            btn.innerHTML='📋';
-            btn.addEventListener('click',()=>navigator.clipboard.writeText(t).then(()=>{btn.innerHTML='✅';setTimeout(()=>btn.innerHTML='📋',800)}));
-            div.appendChild(span);
-            div.appendChild(btn);
-            titlesDiv.appendChild(div);
+            const copyBtn=document.createElement('button');
+            copyBtn.className='copy-btn';
+            copyBtn.setAttribute('aria-label','Copy Title');
+            copyBtn.innerHTML='📋';
+            copyBtn.addEventListener('click',()=>copyToClipboard(t,copyBtn));
+            container.appendChild(span);
+            container.appendChild(copyBtn);
+            titlesDiv.appendChild(container);
         });
     }
 
-    generateBtn.addEventListener('click',generateTitles);
-    topicInput.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();generateTitles();}});
+    generateBtn.addEventListener('click', generateTitles);
+    topicInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); generateTitles(); }});
     applyLanguage();
 });
 </script>

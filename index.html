@@ -323,6 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- START: API Integration (Replacing static generation) ---
+   // --- START: API Integration (Replacing static generation) ---
     async function generateTitles() {
         const L = translations[currentLang];
         const topic = topicInput.value.trim();
@@ -334,15 +335,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         topicInput.classList.remove('error');
-        titlesDiv.innerHTML = `<p>${L.loading}</p>`; // Show loading message
+        titlesDiv.innerHTML = `<p style="text-align:center;">${L.loading}</p>`; // Show loading message
         generateBtn.disabled = true; // Disable button during request
-
+        resetBtn.disabled = true;
+        
         // API Call Configuration
         const requestBody = {
             topic: topic,
             language: currentLang,
             num_titles: 10,
-            // Add other parameters required by your specific API
         };
 
         try {
@@ -350,38 +351,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // The API key is often sent in the Authorization header or a custom header
-                    'Authorization': `Bearer ${API_KEY}`, // Common method for many APIs (e.g., OpenAI)
-                    'X-API-Key': API_KEY // Another common method
                 },
                 body: JSON.stringify(requestBody)
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || `API request failed with status: ${response.status}`);
+                // Try to parse error details from JSON if available
+                const contentType = response.headers.get("content-type");
+                let errorDetails = `Status: ${response.status} ${response.statusText}`;
+
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    const errorData = await response.json();
+                    errorDetails = errorData.error || errorDetails;
+                }
+                
+                // Throw an error that the catch block can handle
+                throw new Error(`API request failed. ${errorDetails}`);
             }
 
             // Assuming the API returns an object with a 'titles' array: { titles: ["Title 1", "Title 2", ...] }
             const data = await response.json();
-            const titles = data.titles || []; // Ensure titles is an array
+            const titles = data.titles || []; 
 
             if (titles.length === 0) {
-                titlesDiv.innerHTML = `<p>No titles could be generated. Try a different topic.</p>`;
+                titlesDiv.innerHTML = `<p style="color:#333; text-align:center;">No titles could be generated. Try a more specific topic.</p>`;
             } else {
-                titlesDiv.innerHTML = titles.map((title) => `
-                    <div class="title-container">
-                        <div class="title-text">${title}</div>
-                        <button class="copy-btn" onclick="copyToClipboard('${title.replace(/'/g, "\\'")}', this)">📋</button>
-                    </div>
-                `).join('');
+                titlesDiv.innerHTML = titles.map((title) => {
+                    // Sanitize title for the copyToClipboard function call
+                    const safeTitle = title.replace(/'/g, "\\'");
+                    return `
+                        <div class="title-container">
+                            <div class="title-text">${title}</div>
+                            <button class="copy-btn" onclick="copyToClipboard('${safeTitle}', this)">📋</button>
+                        </div>
+                    `;
+                }).join('');
             }
 
         } catch (error) {
             console.error('Error generating titles:', error);
-            titlesDiv.innerHTML = `<p style="color:var(--error-color);">Error: Could not connect to AI service. Check your API Key and Console.</p>`;
+            titlesDiv.innerHTML = `<p style="color:var(--error-color); text-align:center;">
+                **Generation Failed:** Check the server logs (for Gemini API errors). Error: ${error.message}
+            </p>`;
         } finally {
             generateBtn.disabled = false; // Re-enable button
+            resetBtn.disabled = false;
         }
     }
     // --- END: API Integration ---

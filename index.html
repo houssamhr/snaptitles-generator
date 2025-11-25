@@ -6,6 +6,7 @@
 <title id="pageTitle">Snapchat Title Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Bangers&display=swap" rel="stylesheet">
 <style>
+/* ... (Keep your existing CSS styles here) ... */
 :root {
 --snap-yellow: #FFFC00;
 --snap-black: #1E1E1E;
@@ -106,18 +107,10 @@ animation: shake 0.5s;
 0% {
 transform: translateX(0);
 }
-25% {
-transform: translateX(-6px);
-}
-50% {
-transform: translateX(6px);
-}
-75% {
-transform: translateX(-6px);
-}
-100% {
-transform: translateX(0);
-}
+25% { transform: translateX(-6px); }
+50% { transform: translateX(6px); }
+75% { transform: translateX(-6px); }
+100% { transform: translateX(0); }
 }
 button {
 display: block;
@@ -253,10 +246,9 @@ width: 100%;
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // ⚠️ IMPORTANT: Storing an API key in client-side code (HTML/JS) is INSECURE.
-    // For a production application, you should use a secure backend server to handle API calls.
-    const API_KEY = "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"; // <<<--- REPLACE WITH YOUR ACTUAL KEY
-    const API_ENDPOINT = "https://generator.snaptitles.free.nf/generate-titles"; // <<<--- REPLACE WITH YOUR ACTUAL API ENDPOINT
+    // --- API Configuration ---
+    // This is the public endpoint URL that the client will call.
+    const API_ENDPOINT = "https://generator.snaptitles.free.nf/generate-titles"; 
 
     const translations = {
         en: { pageTitle: "Snapchat Title Generator", mainTitle: "Snap Titles AI ⚡️", description: "Enter your video topic (e.g., Cat Fails, Easy Makeup) for 10 AI-powered titles!", placeholder: "e.g., Magic Tricks, Cooking Hacks", button: "Generate 10 Titles", reset: "Reset", alert: "Please enter a topic!", loading: "Generating titles... ⏳" },
@@ -322,8 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => btn.innerHTML = old, 900);
     }
 
-    // --- START: API Integration (Replacing static generation) ---
-   // --- START: API Integration (Replacing static generation) ---
+    // --- API Integration ---
     async function generateTitles() {
         const L = translations[currentLang];
         const topic = topicInput.value.trim();
@@ -348,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch(API_ENDPOINT, {
-                method: 'POST',
+                method: 'POST', // CRITICAL: Must be POST to match server.js
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -356,20 +347,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                // Try to parse error details from JSON if available
                 const contentType = response.headers.get("content-type");
                 let errorDetails = `Status: ${response.status} ${response.statusText}`;
 
                 if (contentType && contentType.indexOf("application/json") !== -1) {
                     const errorData = await response.json();
-                    errorDetails = errorData.error || errorDetails;
+                    errorDetails = errorData.error || errorDetails; 
+                } else {
+                    // Handles the case where the server returns a 405 HTML error page
+                    errorDetails = "Server returned an unexpected response format. The backend server may be down or the endpoint method is incorrect (e.g., expecting POST but getting GET).";
                 }
                 
-                // Throw an error that the catch block can handle
-                throw new Error(`API request failed. ${errorDetails}`);
+                throw new Error(`API request failed: ${errorDetails}`);
             }
 
-            // Assuming the API returns an object with a 'titles' array: { titles: ["Title 1", "Title 2", ...] }
+            // Parse the titles array from the server's JSON response
             const data = await response.json();
             const titles = data.titles || []; 
 
@@ -377,7 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 titlesDiv.innerHTML = `<p style="color:#333; text-align:center;">No titles could be generated. Try a more specific topic.</p>`;
             } else {
                 titlesDiv.innerHTML = titles.map((title) => {
-                    // Sanitize title for the copyToClipboard function call
                     const safeTitle = title.replace(/'/g, "\\'");
                     return `
                         <div class="title-container">
@@ -391,10 +382,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error generating titles:', error);
             titlesDiv.innerHTML = `<p style="color:var(--error-color); text-align:center;">
-                **Generation Failed:** Check the server logs (for Gemini API errors). Error: ${error.message}
+                **Generation Failed:** Error: ${error.message}
             </p>`;
         } finally {
-            generateBtn.disabled = false; // Re-enable button
+            generateBtn.disabled = false;
             resetBtn.disabled = false;
         }
     }

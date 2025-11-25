@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Snap Titles AI</title>
+<style>
+body { font-family: Arial, sans-serif; padding: 50px; text-align: center; }
+input, button { padding: 10px; font-size: 16px; margin: 5px; width: 300px; }
+#titles { margin-top: 20px; }
+</style>
+</head>
+<body>
+<h1>Snap Titles AI ⚡️</h1>
+<input type="text" id="topicInput" placeholder="Enter video topic" />
+<br>
+<button id="generateBtn">Generate Titles</button>
+<div id="titles"></div>
+<script>
+document.getElementById('generateBtn').addEventListener('click', async () => {
+    const topic = document.getElementById('topicInput').value.trim();
+    if(!topic){ alert('Please enter a topic!'); return; }
+    const res = await fetch('/api/generate', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ topic })
+    });
+    const data = await res.json();
+    const titlesDiv = document.getElementById('titles');
+    titlesDiv.innerHTML = data.titles.map(t=>'<div>'+t+'</div>').join('');
+});
+</script>
+</body>
+</html>

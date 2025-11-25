@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Snap Titles Generator</title>
+</head>
+<body>
+    <h1>Snap Titles Generator</h1>
+
+    <input id="topic" placeholder="Enter your topic">
+    <button onclick="generate()">Generate Titles</button>
+
+    <div id="results"></div>
+
+    <script>
+        async function generate() {
+            const topic = document.getElementById("topic").value;
+            document.getElementById("results").innerHTML = "Generating...";
+
+            const response = await fetch("/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic })
+            });
+
+            const data = await response.json();
+            document.getElementById("results").innerHTML =
+                data.titles.split("\n").map(t => `<p>${t}</p>`).join("");
+        }
+    </script>
+</body>
+</html>

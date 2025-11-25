@@ -1,13 +1,13 @@
 {
   "name": "snap-titles-generator-backend",
   "version": "1.0.0",
-  "description": "Backend for Snap Titles AI using Gemini API",
+  "description": "Backend for Snap Titles AI using OpenAI API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "@google/genai": "^0.1.0",
+    "openai": "^4.0.0",  <-- NEW LIBRARY
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"

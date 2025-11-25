@@ -1,29 +1,28 @@
-// server.js (Node.js/Express Backend)
+// server.js (Node.js/Express Backend using OpenAI)
 
 // 1. Import necessary libraries
 require('dotenv').config(); // Loads environment variables from .env file
 const express = require('express');
 const cors = require('cors');
-const { GoogleGenAI } = require('@google/genai');
+const OpenAI = require('openai'); // Use the official OpenAI library
 
-// 2. Initialize the Gemini AI Client
-// It automatically looks for the GEMINI_API_KEY in environment variables
-const apiKey = process.env.GEMINI_API_KEY;
+// 2. Initialize the OpenAI Client
+// It automatically looks for the OPENAI_API_KEY in environment variables
+const apiKey = process.env.OPENAI_API_KEY;
 if (!apiKey) {
-    console.error("FATAL ERROR: GEMINI_API_KEY is not set in the environment variables.");
+    console.error("FATAL ERROR: OPENAI_API_KEY is not set in the environment variables.");
     process.exit(1);
 }
-const ai = new GoogleGenAI(apiKey);
-const model = "gemini-2.5-flash"; // A fast and capable model for this task
+// Client initialization
+const openai = new OpenAI({ apiKey: apiKey }); 
+const model = "gpt-3.5-turbo"; // A fast and capable model for this task
 
 // 3. Setup Express Server
 const app = express();
-const port = process.env.PORT || 3000; // Use port 3000 locally, or host's port
+const port = process.env.PORT || 3000; 
 
 // Middleware
-// Enable CORS for all origins, allowing your frontend to connect
 app.use(cors());
-// Parse JSON bodies from client requests
 app.use(express.json()); 
 
 // 4. Define the API Endpoint
@@ -38,18 +37,26 @@ app.post('/generate-titles', async (req, res) => {
         // Construct a detailed prompt for the AI
         const prompt = `Generate exactly ${num_titles || 10} compelling, short, and clickbait-style titles for a Snapchat or TikTok video about the topic: "${topic}". The titles must be in the ${language || 'English'} language. Return the titles as a numbered list, one title per line.`;
         
-        console.log(`Generating titles for topic: ${topic} in ${language}`);
+        console.log(`Generating titles for topic: ${topic} in ${language} using ${model}`);
 
-        const response = await ai.models.generateContent({
+        // 5. OpenAI API Call (using Chat Completions)
+        const completion = await openai.chat.completions.create({
             model: model,
-            contents: prompt,
-            config: {
-                temperature: 0.8, // Higher temperature for creativity
-            }
+            messages: [
+                {
+                    role: "system",
+                    content: "You are an expert social media content creator who specializes in generating clickbait titles for Snapchat and TikTok. Your output must be a clean, numbered list of titles only."
+                },
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ],
+            temperature: 0.8, // Higher temperature for creativity
         });
 
-        // Parse the text response from the AI
-        const generatedText = response.text.trim();
+        // 6. Parse the text response from the AI
+        const generatedText = completion.choices[0].message.content.trim();
         
         // Clean up and format the titles into an array
         const titles = generatedText
@@ -57,16 +64,16 @@ app.post('/generate-titles', async (req, res) => {
             .map(line => line.replace(/^\s*\d+\.\s*/, '').trim()) // Removes numbered list format (1. Title)
             .filter(title => title.length > 5); // Filters out very short or empty lines
 
-        // 5. Send the structured JSON response back to the client
+        // 7. Send the structured JSON response back to the client
         res.json({
             titles: titles
         });
 
     } catch (error) {
-        console.error('Gemini API Error:', error);
-        // 6. Send a descriptive error response to prevent the client from getting HTML
+        console.error('OpenAI API Error:', error);
+        // 8. Send a descriptive error response to the client
         res.status(500).json({ 
-            error: "Failed to generate titles due to a server or external API error.",
+            error: "Could not connect to AI service. Check your API Key and Console.",
             details: error.message 
         });
     }
@@ -78,7 +85,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-// 7. Start the server
+// 9. Start the server
 app.listen(port, () => {
     console.log(`Snap Titles Generator backend running on port ${port}`);
 });
